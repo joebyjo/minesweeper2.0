@@ -2,7 +2,7 @@
 
 int main()
 {
-    Game minesweeper(1000, "MINESWEEPER");
+    Game minesweeper(100, "MINESWEEPER");
     minesweeper.run();
 
     return 0;

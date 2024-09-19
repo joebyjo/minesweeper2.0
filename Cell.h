@@ -9,9 +9,14 @@ class Cell{
 
     protected:
         RectangleShape *cell;
+        int *location;
+        Color color;
+
 
     public:
-        Cell(int size);
+        Cell(int size, int x, int y); // constructor
+        void draw(RenderWindow *game_matrix); // drawing the object on window
+        void set_color(Color color);
 
         
 };
