@@ -15,9 +15,10 @@ else ifeq ($(UNAME_S), Linux)  # linux
 endif
 
 
-# build executable
+# build executable and run exectuable
 $(TARGET): $(SOURCES)
 	g++ -std=c++11 $(SOURCES) $(SFML_LIBS) -o $(TARGET).out
+	./$(TARGET).out 
 
 # clean workspace
 clean:
