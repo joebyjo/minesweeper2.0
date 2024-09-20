@@ -9,7 +9,7 @@ using namespace std;
 class Game{
 
     protected:
-        RenderWindow *game_matrix;
+        RenderWindow *game_window;
         Cell *cell;
 
     public:

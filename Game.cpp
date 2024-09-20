@@ -1,23 +1,23 @@
 #include "Game.h"
 
 Game::Game(int size, string title) {
-    game_matrix = new RenderWindow(VideoMode(size, size), title); // creating the window
-    cell = new Cell(10, 50, 50); // creating the cells
+    game_window = new RenderWindow(VideoMode(size, size), title); // creating the window
+    cell = new Cell(20, 0, 0); // creating the cells
 }
 
 void Game::run() {
 
     // running the window
-    while (game_matrix->isOpen()){
+    while (game_window->isOpen()){
 
         Event close;
-        while (game_matrix->pollEvent(close)){
+        while (game_window->pollEvent(close)){
             if (close.type == Event:: Closed){
-                game_matrix->close();
+                game_window->close();
             }
         }
-        game_matrix->clear();
-        cell->draw(game_matrix);
-        game_matrix->display();
+        game_window->clear();
+        cell->draw(game_window);
+        game_window->display();
     }
 }

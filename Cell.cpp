@@ -16,10 +16,13 @@ Cell::Cell(int size, int x, int y){
     cell->setPosition(location[0], location[1]);
     cell->setFillColor(color);
     cell->setOrigin(location[0] / 2, location[1] / 2);
+    cell->setOutlineColor(Color:: Black);
+    cell->setOutlineThickness(1);
 }
 
-void Cell::draw(RenderWindow *game_matrix) {
-    game_matrix->draw(*cell);
+// Function to draw the cell on window
+void Cell::draw(RenderWindow *game_window) {
+    game_window->draw(*cell);
 }
 
 void Cell::set_color(Color color) {
