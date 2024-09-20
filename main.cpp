@@ -2,9 +2,10 @@
 
 int main()
 {
-    const int size_window = 1000;
+    const int num_rows = 20;
+    const int num_cols = 20;
 
-    Game minesweeper(size_window, "MINESWEEPER");
+    Game minesweeper(num_cols, num_rows);
     minesweeper.run();
 
     return 0;

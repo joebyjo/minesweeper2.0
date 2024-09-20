@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Cell.h"
+#include "CellMatrix.h"
 #include <iostream>
 #include <string>
 
@@ -10,10 +10,10 @@ class Game{
 
     protected:
         RenderWindow *game_window;
-        Cell *cell;
+        CellMatrix *game_matrix;
 
     public:
-        Game(int size, string title);
+        Game(int num_cols, int num_rows);
         void run();
 
         

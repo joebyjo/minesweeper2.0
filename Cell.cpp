@@ -1,6 +1,6 @@
 #include "Cell.h"
 
-Cell::Cell(int size, int x, int y){
+Cell::Cell(int x, int y){
 
     cell = new RectangleShape();
 
@@ -12,7 +12,7 @@ Cell::Cell(int size, int x, int y){
     // saving the color into variable color
     this->color = Color::Green;
 
-    cell->setSize(Vector2f(size, size));
+    cell->setSize(Vector2f(50, 50));
     cell->setPosition(location[0], location[1]);
     cell->setFillColor(color);
     cell->setOrigin(location[0] / 2, location[1] / 2);

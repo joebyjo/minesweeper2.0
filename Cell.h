@@ -14,7 +14,7 @@ class Cell{
 
 
     public:
-        Cell(int size, int x, int y); // constructor
+        Cell(int x, int y); // constructor
         void draw(RenderWindow *game_window); // drawing the object on window
         void set_color(Color color);
 

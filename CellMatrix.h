@@ -3,9 +3,11 @@
 class CellMatrix{
 
     protected:
-        Cell **matrix = new Cell*[20*20];
+        Cell **matrix;
 
     public:
+        CellMatrix(int num_cols, int num_rows);
+
 
         
 };
