@@ -16,8 +16,8 @@ Cell::Cell(int size, int x, int y){
     cell->setPosition(location[0], location[1]);
     cell->setFillColor(color);
     cell->setOrigin(location[0] / 2, location[1] / 2);
-    cell->setOutlineColor(Color:: Black);
-    cell->setOutlineThickness(1);
+    cell->setOutlineColor(Color(0,128,0,255));
+    cell->setOutlineThickness(5);
 }
 
 // Function to draw the cell on window
