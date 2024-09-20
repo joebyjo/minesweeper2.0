@@ -1,4 +1,5 @@
 #include "Cell.h"
+#include "Constants.h"
 
 Cell::Cell(int x, int y){
 
@@ -10,7 +11,7 @@ Cell::Cell(int x, int y){
     this->location[1] = y;
 
     // saving the color into variable color
-    this->color = Color::Green;
+    this->color = CELL_COLOR_1;
 
     cell->setSize(Vector2f(50, 50));
     cell->setPosition(location[0], location[1]);

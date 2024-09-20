@@ -1,5 +1,6 @@
+#include "Constants.h"
 #include "Game.h"
-#include "Constantas.h"
+#include "Constants.h"
 
 Game::Game(int num_cols, int num_rows) {
     game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), "MineSweeper"); // creating the window
