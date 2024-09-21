@@ -1,3 +1,6 @@
+#ifndef CELL_H
+#define CELL_H
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -14,9 +17,11 @@ class Cell{
 
 
     public:
-        Cell(int size, int x, int y); // constructor
+        Cell(int x, int y); // constructor
         void draw(RenderWindow *game_window); // drawing the object on window
         void set_color(Color color);
 
         
 };
+
+#endif

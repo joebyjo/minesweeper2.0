@@ -1,6 +1,7 @@
 #include "Cell.h"
+#include "Constants.h"
 
-Cell::Cell(int size, int x, int y){
+Cell::Cell(int x, int y){
 
     cell = new RectangleShape();
 
@@ -10,14 +11,13 @@ Cell::Cell(int size, int x, int y){
     this->location[1] = y;
 
     // saving the color into variable color
-    this->color = Color::Green;
+    this->color = CELL_COLOR_1;
 
-    cell->setSize(Vector2f(size, size));
+    cell->setSize(Vector2f(50, 50));
     cell->setPosition(location[0], location[1]);
     cell->setFillColor(color);
-    cell->setOrigin(location[0] / 2, location[1] / 2);
-    cell->setOutlineColor(Color(0,128,0,255));
-    cell->setOutlineThickness(5);
+    // cell->setOutlineColor(Color:: Black);
+    // cell->setOutlineThickness(1);
 }
 
 // Function to draw the cell on window
