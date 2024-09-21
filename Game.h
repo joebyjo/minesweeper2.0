@@ -19,6 +19,15 @@ class Game{
         Game(int num_cols, int num_rows);
         void run();
 
+        // getters and setters
+        RenderWindow* get_game_window();
+        CellMatrix* get_game_matrix();
+        
+        void set_game_window(RenderWindow* game_window);
+        void set_game_matrix(CellMatrix* game_matrix);
+
+        ~Game();
+
         
 };
 

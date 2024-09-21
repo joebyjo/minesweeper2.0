@@ -34,3 +34,48 @@ void CellMatrix::display(RenderWindow *game_window) {
         }
     }
 }
+
+// get matrix
+Cell** CellMatrix:: get_matrix() {
+    return this->matrix;
+}
+
+// get num cols
+int CellMatrix:: get_num_cols() {
+    return this->num_cols;
+}
+
+// get num rows
+int CellMatrix:: get_num_rows() {
+    return this->num_rows;
+}
+
+// set matrix manually
+void CellMatrix:: set_matrix(Cell **matrix) {
+    this->matrix = matrix;
+};
+
+// set num of cols manually
+void CellMatrix:: set_num_cols(int num_cols){
+    this->num_cols = num_cols;
+};
+
+// set num of rows manually
+void CellMatrix:: set_num_rows(int num_rows){
+    this->num_rows = num_rows;
+};
+
+
+
+// destroy cells and cell matrix
+CellMatrix:: ~CellMatrix() {
+
+    for (int i = 0; i < num_rows; i++){
+        for(int j = 0; j < num_cols; j++){
+            delete matrix[i*num_cols + j];
+        }
+    }
+
+    delete[] matrix;
+
+}
