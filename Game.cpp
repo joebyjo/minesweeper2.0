@@ -32,6 +32,27 @@ void Game::run() {
     }
 }
 
+// get game window
+RenderWindow* Game:: get_game_window() {
+    return this->game_window;
+}
+
+// get game matrix
+CellMatrix* Game:: get_game_matrix() {
+    return this->game_matrix;
+}
+
+// set game window manually
+void Game:: set_game_window(RenderWindow* game_window) {
+    this->game_window = game_window;
+};
+
+// set game matrix manually
+void Game:: set_game_matrix(CellMatrix* game_matrix) {
+    this->game_matrix = game_matrix;
+};
+
+
 // destroy all attached objects 
 Game:: ~Game() {
     delete game_window;
