@@ -12,6 +12,7 @@ Cell::Cell(int x, int y){
 
     // saving the color into variable color
     this->color = CELL_COLOR_1;
+    this->is_reveal = false;
 
     cell->setSize(Vector2f(CELL_SIZE,CELL_SIZE));
     cell->setPosition(location[0], location[1]);
@@ -25,6 +26,18 @@ void Cell::draw(RenderWindow *game_window) {
     game_window->draw(*cell);
 }
 
+// function to reveal the color of cell
+void Cell::reveal() {
+    this->is_reveal = true;
+    cell->setFillColor(this->color); // changing color
+    this->unique_function(); // calling the unique function
+}
+
+// owritten function
+void Cell::unique_function() {}
+
+
+// getters and setters
 // get cell
 RectangleShape* Cell:: get_cell() {
     return this->cell;
@@ -53,8 +66,7 @@ void Cell:: set_location(int *location) {
 
 // set cell color manually
 void Cell::set_color(Color color) {
-    this->color = color;
-    cell->setFillColor(this->color);
+    cell->setFillColor(color);
 }
 
 // destructor to delete rectangle obj and location array
