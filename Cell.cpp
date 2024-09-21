@@ -12,6 +12,7 @@ Cell::Cell(int x, int y){
 
     // saving the color into variable color
     this->color = CELL_COLOR_1;
+    this->is_reveal = false;
 
     cell->setSize(Vector2f(50, 50));
     cell->setPosition(location[0], location[1]);
@@ -25,7 +26,17 @@ void Cell::draw(RenderWindow *game_window) {
     game_window->draw(*cell);
 }
 
+// function set the color of cell
 void Cell::set_color(Color color) {
-    this->color = color;
-    cell->setFillColor(this->color);
+    cell->setFillColor(color);
 }
+
+// function to reveal the color of cell
+void Cell::reveal() {
+    this->is_reveal = true;
+    cell->setFillColor(this->color); // changing color
+    this->unique_function(); // calling the unique function
+}
+
+// owritten function
+void Cell::unique_function() {}

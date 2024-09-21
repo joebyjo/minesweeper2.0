@@ -14,12 +14,19 @@ class Cell{
         RectangleShape *cell;
         int *location;
         Color color;
+        bool is_reveal;
 
 
     public:
         Cell(int x, int y); // constructor
+
         void draw(RenderWindow *game_window); // drawing the object on window
-        void set_color(Color color);
+
+        void set_color(Color color); // setting color
+
+        void reveal(); // changing the color to the desiginated cell color
+
+        void unique_function(); // owriting function
 
         
 };
