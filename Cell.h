@@ -1,3 +1,6 @@
+#ifndef CELL_H
+#define CELL_H
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -20,3 +23,5 @@ class Cell{
 
         
 };
+
+#endif

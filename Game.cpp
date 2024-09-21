@@ -1,9 +1,8 @@
 #include "Constants.h"
 #include "Game.h"
-#include "Constants.h"
 
 Game::Game(int num_cols, int num_rows) {
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), "MineSweeper"); // creating the window
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); // creating the window
     game_matrix = new CellMatrix(num_cols, num_rows); // creating the matrix of cells
 }
 
@@ -22,7 +21,7 @@ void Game::run() {
         game_window->clear();
 
         // display the matrix
-        game_matrix->display();
+        game_matrix->display(game_window);
 
         // display the window
         game_window->display();

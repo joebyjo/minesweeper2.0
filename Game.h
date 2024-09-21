@@ -1,3 +1,6 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include <SFML/Graphics.hpp>
 #include "CellMatrix.h"
 #include <iostream>
@@ -18,3 +21,5 @@ class Game{
 
         
 };
+
+#endif
