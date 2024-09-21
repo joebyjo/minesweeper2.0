@@ -26,8 +26,11 @@ void Game::run() {
                     int mouseX = mousePos.x;
                     int mouseY = mousePos.y;
 
+                    int cell_index_x = mouseX / CELL_SIZE;
+                    int cell_index_y = mouseY / CELL_SIZE;
 
-                    cout << mouseX << " " << mouseY << endl;
+                    // i*num_cols + j
+                    game_matrix->get_matrix()[cell_index_y*NUM_OF_COLS+cell_index_x]->set_color(Color(0,0,0));
 
 
                     }
