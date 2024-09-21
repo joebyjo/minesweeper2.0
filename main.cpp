@@ -3,10 +3,8 @@
 
 int main()
 {
-    const int num_rows = 20;
-    const int num_cols = 20;
 
-    Game minesweeper(num_cols, num_rows);
+    Game minesweeper(NUM_OF_COLS, NUM_OF_ROWS);
     minesweeper.run();
 
     return 0;

@@ -1,20 +1,28 @@
 #include "CellMatrix.h"
 #include "Constants.h"
 
-CellMatrix::CellMatrix(int num_cols, int num_rows) {
+CellMatrix::CellMatrix(int num_rows, int num_cols) {
 
     // updating value of matrix
-    num_rows = this->num_rows;
-    num_cols = this->num_cols;
+    this->num_rows = num_rows;
+    this->num_cols = num_cols;
 
-    matrix = new Cell*[num_rows * num_cols]; // creating the 2-2 matrix of cells pointer
+    // creating the 2 x 2 matrix of cells pointer
+    matrix = new Cell*[num_rows * num_cols]; 
 
-    // intiliasising each cells int the matrix
+    // initialising each cells into the matrix
     for (int i = 0; i < num_rows; i++){
         for (int j = 0; j < num_cols; j++){
 
-            matrix[i*num_cols + j] = new Cell(i*CELL_SIZE, j*CELL_SIZE);
-            cout << i*CELL_SIZE << j*CELL_SIZE << endl;
+            matrix[i*num_cols + j] = new Cell(j*CELL_SIZE, i*CELL_SIZE);
+
+            // alternating colors
+            if ((j%2== 0) && (i%2==0)){
+                matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
+            } else if ((j%2==1) && (i%2==1)) {
+                matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
+
+            }
         }
     }
 }

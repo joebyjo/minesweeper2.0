@@ -2,8 +2,12 @@
 #include "Game.h"
 
 Game::Game(int num_cols, int num_rows) {
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); // creating the window
-    game_matrix = new CellMatrix(num_cols, num_rows); // creating the matrix of cells
+    
+    // creating the window
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); 
+    
+    // creating the matrix of cells
+    game_matrix = new CellMatrix(num_rows, num_cols); 
 }
 
 void Game::run() {
