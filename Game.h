@@ -19,6 +19,8 @@ class Game{
         Game(int num_cols, int num_rows);
         void run();
 
+        ~Game();
+
         
 };
 

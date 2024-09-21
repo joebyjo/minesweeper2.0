@@ -14,7 +14,7 @@ class CellMatrix{
         CellMatrix(int num_rows, int num_cols);
         void display(RenderWindow *game_window);
 
-
+        ~CellMatrix();
         
 };
 

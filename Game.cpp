@@ -31,3 +31,9 @@ void Game::run() {
         game_window->display();
     }
 }
+
+// destroy all attached objects 
+Game:: ~Game() {
+    delete game_window;
+    delete game_matrix;
+}

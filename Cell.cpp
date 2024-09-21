@@ -29,3 +29,9 @@ void Cell::set_color(Color color) {
     this->color = color;
     cell->setFillColor(this->color);
 }
+
+// destructor to delete rectangle obj and location array
+Cell:: ~Cell() {
+    delete cell;
+    delete[] location;
+}

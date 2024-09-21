@@ -34,3 +34,16 @@ void CellMatrix::display(RenderWindow *game_window) {
         }
     }
 }
+
+// destroy cells and cell matrix
+CellMatrix:: ~CellMatrix() {
+
+    for (int i = 0; i < num_rows; i++){
+        for(int j = 0; j < num_cols; j++){
+            delete matrix[i*num_cols + j];
+        }
+    }
+
+    delete[] matrix;
+
+}

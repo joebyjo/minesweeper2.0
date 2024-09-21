@@ -21,6 +21,9 @@ class Cell{
         void draw(RenderWindow *game_window); // drawing the object on window
         void set_color(Color color);
 
+
+        ~Cell();
+
         
 };
 
