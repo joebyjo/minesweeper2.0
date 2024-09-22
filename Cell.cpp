@@ -11,12 +11,12 @@ Cell::Cell(int x, int y){
     this->location[1] = y;
 
     // saving the color into variable color
-    this->color = CELL_COLOR_1;
+    this->color = MINE_COLOR;//CELL_COLOR_1;
     this->is_reveal = false;
 
     cell->setSize(Vector2f(CELL_SIZE,CELL_SIZE));
     cell->setPosition(location[0], location[1]);
-    cell->setFillColor(color);
+    cell->setFillColor(CELL_COLOR_1);
     // cell->setOutlineColor(Color:: Black);
     // cell->setOutlineThickness(1);
 }
@@ -29,7 +29,7 @@ void Cell::draw(RenderWindow *game_window) {
 // function to reveal the color of cell
 void Cell::reveal() {
     this->is_reveal = true;
-    cell->setFillColor(this->color); // changing color
+    this->set_color(this->color); // changing color
     this->unique_function(); // calling the unique function
 }
 

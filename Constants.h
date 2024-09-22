@@ -29,5 +29,6 @@ const Color CELL_COLOR_2 = Color(147, 203, 57);
 const Color EMPTY_COLOR_LIGHT = Color(0, 0, 0);
 const Color EMPTY_COLOR_DARK = Color(0, 255, 0);
 const Color NUMBER_COLOR = Color(0, 0, 255);
+const Color MINE_COLOR = Color(255, 0, 0);
 
 #endif

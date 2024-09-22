@@ -21,7 +21,7 @@ void Game::run() {
                 game_window->close();
             } else if (close.type == Event::MouseButtonReleased){
                 if (close.mouseButton.button == sf::Mouse::Left) {
-                    // cout << static_cast<int>(floor(.x));
+                    
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
                     int mouseX = mousePos.x;
                     int mouseY = mousePos.y;
@@ -29,12 +29,24 @@ void Game::run() {
                     int cell_index_x = mouseX / CELL_SIZE;
                     int cell_index_y = mouseY / CELL_SIZE;
 
-                    // i*num_cols + j
-                    game_matrix->get_matrix()[cell_index_y*NUM_OF_COLS+cell_index_x]->set_color(Color(0,0,0));
+                    // y * num_cols + x
+                    game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->reveal();
 
 
                     }
-                else if (close.mouseButton.button == sf::Mouse::Right) {cout << "joe" << endl;}
+                else if (close.mouseButton.button == sf::Mouse::Right) {
+
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+                    int mouseX = mousePos.x;
+                    int mouseY = mousePos.y;
+
+                    int cell_index_x = mouseX / CELL_SIZE;
+                    int cell_index_y = mouseY / CELL_SIZE;
+
+                    // y * num_cols + x
+                    // game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->flag();
+                    
+                }
             }
 
 
