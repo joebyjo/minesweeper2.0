@@ -28,9 +28,12 @@ void Cell::draw(RenderWindow *game_window) {
 
 // function to reveal the color of cell
 void Cell::reveal() {
-    this->is_reveal = true;
-    this->set_color(this->color); // changing color
-    this->unique_function(); // calling the unique function
+    // checking if the cell has been already revealed
+    if (this->is_reveal == false){
+        this->is_reveal = true;
+        this->set_color(this->color); // changing color
+        this->unique_function(); // calling the unique function
+    }
 }
 
 // owritten function
