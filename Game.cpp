@@ -19,7 +19,37 @@ void Game::run() {
         while (game_window->pollEvent(close)){
             if (close.type == Event:: Closed){
                 game_window->close();
+            } else if (close.type == Event::MouseButtonReleased){
+                if (close.mouseButton.button == sf::Mouse::Left) {
+                    
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+                    int mouseX = mousePos.x;
+                    int mouseY = mousePos.y;
+
+                    int cell_index_x = mouseX / CELL_SIZE;
+                    int cell_index_y = mouseY / CELL_SIZE;
+
+                    // y * num_cols + x
+                    game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->reveal();
+
+
+                    }
+                else if (close.mouseButton.button == sf::Mouse::Right) {
+
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+                    int mouseX = mousePos.x;
+                    int mouseY = mousePos.y;
+
+                    int cell_index_x = mouseX / CELL_SIZE;
+                    int cell_index_y = mouseY / CELL_SIZE;
+
+                    // y * num_cols + x
+                    // game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->flag();
+                    
+                }
             }
+
+
         }
 
         game_window->clear();
@@ -32,6 +62,8 @@ void Game::run() {
 
         // display the window
         game_window->display();
+
+        
     }
 }
 
