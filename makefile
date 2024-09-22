@@ -3,7 +3,7 @@
 TARGET = game
 
 # source files
-SOURCES = main.cpp Game.cpp Cell.cpp CellMatrix.cpp
+SOURCES = main.cpp Game.cpp Cell.cpp CellMatrix.cpp Empty.cpp Mine.cpp Number.cpp
 
 UNAME_S := $(shell uname -s)
 

@@ -27,11 +27,16 @@ void Game::run() {
         // display the matrix
         game_matrix->display(game_window);
 
+        // setting mines randomally
+        game_matrix->set_gameboard();
+
         // display the window
         game_window->display();
     }
 }
 
+
+// getters and setters
 // get game window
 RenderWindow* Game:: get_game_window() {
     return this->game_window;

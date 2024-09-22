@@ -35,6 +35,10 @@ void CellMatrix::display(RenderWindow *game_window) {
     }
 }
 
+void CellMatrix::set_gameboard() {
+    
+}
+
 // get matrix
 Cell** CellMatrix:: get_matrix() {
     return this->matrix;
@@ -50,6 +54,8 @@ int CellMatrix:: get_num_rows() {
     return this->num_rows;
 }
 
+int CellMatrix::get_num_mines() { return this->num_mines; }
+
 // set matrix manually
 void CellMatrix:: set_matrix(Cell **matrix) {
     this->matrix = matrix;
@@ -63,9 +69,12 @@ void CellMatrix:: set_num_cols(int num_cols){
 // set num of rows manually
 void CellMatrix:: set_num_rows(int num_rows){
     this->num_rows = num_rows;
-};
+}
 
-
+// set num of mines
+void CellMatrix::set_num_mines(int num_mines) {
+    this->num_mines = num_mines;
+}
 
 // destroy cells and cell matrix
 CellMatrix:: ~CellMatrix() {
