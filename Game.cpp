@@ -12,6 +12,9 @@ Game::Game(int num_cols, int num_rows) {
 
 void Game::run() {
 
+    // setting mines randomly
+    game_matrix->set_gameboard(); 
+
     // running the window
     while (game_window->isOpen()){
 
@@ -56,9 +59,6 @@ void Game::run() {
 
         // display the matrix
         game_matrix->display(game_window);
-
-        // setting mines randomally
-        game_matrix->set_gameboard();
 
         // display the window
         game_window->display();

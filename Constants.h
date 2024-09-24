@@ -3,6 +3,8 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <ctime>
+
 using namespace std;
 using namespace sf;
 
@@ -23,11 +25,14 @@ const int NUM_OF_MINES = NUM_OF_CELLS * 0.1;
 // title of window
 const string WINDOW_TITLE = "MINESWEEPER";
 
+// random seed
+const int RANDOM_SEED = 0; // time(0);
+
 // Colors
 const Color CELL_COLOR_1 = Color(170, 215, 81);
 const Color CELL_COLOR_2 = Color(147, 203, 57);
-const Color EMPTY_COLOR_LIGHT = Color(0, 0, 0);
-const Color EMPTY_COLOR_DARK = Color(0, 255, 0);
+const Color EMPTY_COLOR_LIGHT = Color(232,188,148);
+const Color EMPTY_COLOR_DARK = Color(212,188,156);
 const Color NUMBER_COLOR = Color(0, 0, 255);
 const Color MINE_COLOR = Color(255, 0, 0);
 

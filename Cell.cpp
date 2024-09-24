@@ -11,7 +11,7 @@ Cell::Cell(int x, int y){
     this->location[1] = y;
 
     // saving the color into variable color
-    this->color = MINE_COLOR;//CELL_COLOR_1;
+    this->color = EMPTY_COLOR_LIGHT;
     this->is_reveal = false;
 
     cell->setSize(Vector2f(CELL_SIZE,CELL_SIZE));

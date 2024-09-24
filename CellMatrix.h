@@ -10,7 +10,7 @@ class CellMatrix{
         int num_cols; // storing number of columns
         int num_rows; // storing number of rows
 
-        int *location_mines; // storing location of mines in one array
+        int *mine_locations; // storing location of mines in one array
         int num_mines; // storing the number of mines
 
     public:

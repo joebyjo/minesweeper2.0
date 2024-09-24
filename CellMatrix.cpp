@@ -1,5 +1,8 @@
+#include <cstdlib>
+
 #include "CellMatrix.h"
 #include "Constants.h"
+#include "Mine.h"
 
 CellMatrix::CellMatrix(int num_rows, int num_cols) {
 
@@ -7,36 +10,74 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
     this->num_rows = num_rows;
     this->num_cols = num_cols;
 
-    // creating the 2 x 2 matrix of cells pointer
+    // creating the 2D array of cells pointer
     matrix = new Cell*[num_rows * num_cols]; 
 
-    // initialising each cells into the matrix
-    for (int i = 0; i < num_rows; i++){
-        for (int j = 0; j < num_cols; j++){
+    num_mines = NUM_OF_MINES;
 
-            matrix[i*num_cols + j] = new Cell(j*CELL_SIZE, i*CELL_SIZE);
+    // creating array to store location of mines
+    mine_locations = new int[num_mines];
 
-            // alternating colors
-            if ((j%2== 0) && (i%2==0)){
-                matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
-            } else if ((j%2==1) && (i%2==1)) {
-                matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
-
-            }
-        }
+    // initialising initially with nullptr
+    for (int i = 0; i < num_rows*num_cols; i++) {
+            matrix[i] = nullptr;
     }
+
 }
 
 void CellMatrix::display(RenderWindow *game_window) {
-    for (int i = 0; i < num_rows; i++){
-        for(int j = 0; j < num_cols; j++){
-            matrix[i*num_cols + j]->draw(game_window);
-        }
+    for (int i = 0; i < num_rows*num_cols; i++) {
+            matrix[i]->draw(game_window);  
     }
 }
 
 void CellMatrix::set_gameboard() {
-    
+    srand(RANDOM_SEED);
+
+    auto check_if_member = [&](int num) {
+        for (int i = 0; i < num_mines; ++i) {
+            if (mine_locations[i] == num) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    // initialising all mines into the matrix randomly
+    for (int i=0; i< num_mines; i++) {
+        int location = rand() % (num_rows * num_cols);
+
+        if (!(check_if_member(location))) { mine_locations[i] = location;} 
+        else { i--; };
+
+        int row = location % num_cols;
+        int col = location / num_cols;
+
+        matrix[location] = new Mine(row*CELL_SIZE, col*CELL_SIZE);
+        
+    }
+
+    // initialising each cells into the matrix
+    for (int i = 0; i < num_rows; i++){
+        for (int j = 0; j < num_cols; j++){   
+        
+            // initialising all non-mine elements of matrix with Cell()
+            if (matrix[i*num_cols + j] == nullptr){
+                matrix[i*num_cols + j] = new Cell(j*CELL_SIZE, i*CELL_SIZE);
+                // std::cout << "O ";
+            } else {
+                // std::cout << "X ";
+            }
+
+            // alternating colors
+            if (((j%2== 0) && (i%2==0)) || ((j%2==1) && (i%2==1))){ 
+                matrix[i*num_cols + j]->set_color(CELL_COLOR_2); } 
+            else { 
+                matrix[i*num_cols + j]->set_color(CELL_COLOR_1); } 
+                
+        }
+        // std::cout << std::endl;
+    }
 }
 
 // get matrix
@@ -79,10 +120,8 @@ void CellMatrix::set_num_mines(int num_mines) {
 // destroy cells and cell matrix
 CellMatrix:: ~CellMatrix() {
 
-    for (int i = 0; i < num_rows; i++){
-        for(int j = 0; j < num_cols; j++){
-            delete matrix[i*num_cols + j];
-        }
+    for (int i = 0; i < num_rows*num_cols; i++){
+        delete matrix[i];
     }
 
     delete[] matrix;
