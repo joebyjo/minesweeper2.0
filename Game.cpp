@@ -18,12 +18,12 @@ void Game::run() {
     // running the window
     while (game_window->isOpen()){
 
-        Event close; // to close the window
-        while (game_window->pollEvent(close)){
-            if (close.type == Event:: Closed){
+        Event event; // to close the window
+        while (game_window->pollEvent(event)){
+            if (event.type == Event:: Closed){
                 game_window->close();
-            } else if (close.type == Event::MouseButtonReleased){
-                if (close.mouseButton.button == sf::Mouse::Left) {
+            } else if (event.type == Event::MouseButtonReleased){
+                if (event.mouseButton.button == sf::Mouse::Left) {
                     
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
                     int mouseX = mousePos.x;
@@ -37,7 +37,7 @@ void Game::run() {
 
 
                     }
-                else if (close.mouseButton.button == sf::Mouse::Right) {
+                else if (event.mouseButton.button == sf::Mouse::Right) {
 
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
                     int mouseX = mousePos.x;
