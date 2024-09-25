@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Cell.h"
 
+class CellMatrix;
+
 using namespace sf;
 using namespace std;
 

@@ -3,10 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "CellMatrix.h"
+#include <string>
 
 using namespace sf;
 using namespace std;
+
+class CellMatrix;
 
 class Cell{
 
@@ -21,7 +23,7 @@ class Cell{
         Cell(int x, int y); // constructor
 
         void draw(RenderWindow *game_window); // drawing the object on window
-        void reveal(CellMatrix *game_matrix); // changing the color to the desiginated cell color
+        virtual void reveal(CellMatrix *game_matrix); // changing the color to the desiginated cell color
         virtual void on_revealed(CellMatrix *game_matrix) = 0; // owriting function
         
 
@@ -35,7 +37,7 @@ class Cell{
         void set_location(int *location);
         void set_color(Color color);
 
-        ~Cell();
+        virtual ~Cell();
 
         
 };

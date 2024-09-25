@@ -1,7 +1,10 @@
 #ifndef CELLMATRIX_H
 #define CELLMATRIX_H
 
-#include "Cell.h"
+#include <SFML/Graphics.hpp>
+using namespace sf;
+
+class Cell;
 
 class CellMatrix{
 

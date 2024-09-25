@@ -1,5 +1,6 @@
 #include "Cell.h"
 #include "Constants.h"
+#include "CellMatrix.h"
 
 Cell::Cell(int x, int y){
 

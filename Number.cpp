@@ -1,5 +1,6 @@
 #include "Number.h"
 #include "Constants.h"
+#include "CellMatrix.h"
 
 Number::Number(int x, int y): Cell(x, y) {
     this->color = NUMBER_COLOR;

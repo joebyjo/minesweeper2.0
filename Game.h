@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "CellMatrix.h"
+#include "Cell.h"
 #include <iostream>
 #include <string>
 

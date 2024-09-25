@@ -8,6 +8,8 @@
 using namespace sf;
 using namespace std;
 
+class CellMatrix;
+
 class Empty: public Cell{
 
     protected:

@@ -2,6 +2,7 @@
 
 #include "CellMatrix.h"
 #include "Constants.h"
+#include "Cell.h"
 #include "Mine.h"
 #include "Empty.h"
 #include "Number.h"
