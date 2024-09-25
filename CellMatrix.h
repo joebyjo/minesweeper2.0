@@ -18,11 +18,13 @@ class CellMatrix{
         void display(RenderWindow *game_window);
         void set_gameboard(); // set the game board to the type of cell
         void display_overlay(); // displays the overlaying checkerboard
+        void game_over();
 
         // getters and setters
         Cell** get_matrix();
         int get_num_cols();
         int get_num_rows();
+        int* get_mine_location();
         int get_num_mines();
         int* get_mine_locations();
 

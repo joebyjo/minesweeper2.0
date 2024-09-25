@@ -16,7 +16,8 @@ class Mine: public Cell{
     public:
         Mine(int x, int y); // constructor
         
-        void unique_function(); // owriting function
+        void on_revealed(CellMatrix *game_matrix); // owriting function
+        void delete_mine(CellMatrix *game_matrix); // deleting the mine
 
         
 };

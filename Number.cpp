@@ -3,6 +3,7 @@
 
 Number::Number(int x, int y): Cell(x, y) {
     this->color = NUMBER_COLOR;
+    this->type = "number";
 }
 
-void Number::unique_function() {}
+void Number::on_revealed(CellMatrix* game_matrix) {}

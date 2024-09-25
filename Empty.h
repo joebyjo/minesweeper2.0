@@ -16,7 +16,7 @@ class Empty: public Cell{
     public:
         Empty(int x, int y); // constructor
         
-        void unique_function(); // owriting function
+        void on_revealed(CellMatrix *game_matrix); // owriting function
 
         
 };

@@ -91,6 +91,9 @@ void CellMatrix::display_overlay() {
 
 }
 
+// game over function
+void CellMatrix::game_over() {}
+
 // get matrix
 Cell** CellMatrix:: get_matrix() {
     return this->matrix;
