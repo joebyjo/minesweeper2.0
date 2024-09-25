@@ -14,15 +14,15 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
     for (int i = 0; i < num_rows; i++){
         for (int j = 0; j < num_cols; j++){
 
-            matrix[i*num_cols + j] = new Cell(j*CELL_SIZE, i*CELL_SIZE);
+            matrix[i*num_cols + j] = nullptr;
 
             // alternating colors
-            if ((j%2== 0) && (i%2==0)){
-                matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
-            } else if ((j%2==1) && (i%2==1)) {
-                matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
+            // if ((j%2== 0) && (i%2==0)){
+            //     matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
+            // } else if ((j%2==1) && (i%2==1)) {
+            //     matrix[i*num_cols + j]->set_color(CELL_COLOR_2);
 
-            }
+            // }
         }
     }
 }
@@ -39,6 +39,9 @@ void CellMatrix::set_gameboard() {
     
 }
 
+// game over function
+void CellMatrix::game_over() {}
+
 // get matrix
 Cell** CellMatrix:: get_matrix() {
     return this->matrix;
@@ -53,6 +56,8 @@ int CellMatrix:: get_num_cols() {
 int CellMatrix:: get_num_rows() {
     return this->num_rows;
 }
+
+int *CellMatrix::get_mine_location() { return this->mine_locations; }
 
 int CellMatrix::get_num_mines() { return this->num_mines; }
 

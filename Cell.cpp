@@ -27,17 +27,17 @@ void Cell::draw(RenderWindow *game_window) {
 }
 
 // function to reveal the color of cell
-void Cell::reveal() {
+void Cell::reveal(CellMatrix *game_matrix) {
     // checking if the cell has been already revealed
     if (this->is_reveal == false){
         this->is_reveal = true;
         this->set_color(this->color); // changing color
-        this->unique_function(); // calling the unique function
+        this->on_revealed(game_matrix); // calling the unique function
     }
 }
 
 // owritten function
-void Cell::unique_function() {}
+void Cell::on_revealed(CellMatrix *game_matrix) {};
 
 
 // getters and setters
@@ -54,7 +54,8 @@ int* Cell:: get_location() {
 // get color
 Color Cell:: get_color() {
     return this->color;
-};
+}
+string Cell::get_type() { return this->type; };
 
 // set cell manually
 void Cell:: set_cell(RectangleShape *cell) {

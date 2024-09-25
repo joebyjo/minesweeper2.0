@@ -30,7 +30,7 @@ void Game::run() {
                     int cell_index_y = mouseY / CELL_SIZE;
 
                     // y * num_cols + x
-                    game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->reveal();
+                    game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->reveal(game_matrix);
 
 
                     }
