@@ -74,7 +74,7 @@ void CellMatrix::set_gameboard() {
                 matrix[i*num_cols + j]->set_color(CELL_COLOR_2); } 
             else { 
                 matrix[i*num_cols + j]->set_color(CELL_COLOR_1); } 
-                
+
         }
         // std::cout << std::endl;
     }
@@ -95,7 +95,14 @@ int CellMatrix:: get_num_rows() {
     return this->num_rows;
 }
 
-int CellMatrix::get_num_mines() { return this->num_mines; }
+// get num mines
+int CellMatrix::get_num_mines() { 
+    return this->num_mines; 
+}
+
+int* CellMatrix::get_mine_locations() {
+    return this->mine_locations;
+}
 
 // set matrix manually
 void CellMatrix:: set_matrix(Cell **matrix) {
@@ -117,6 +124,11 @@ void CellMatrix::set_num_mines(int num_mines) {
     this->num_mines = num_mines;
 }
 
+// set mine locations
+void CellMatrix::set_mine_locations(int *mine_locations) {
+    this->mine_locations = mine_locations;
+}
+
 // destroy cells and cell matrix
 CellMatrix:: ~CellMatrix() {
 
@@ -125,5 +137,6 @@ CellMatrix:: ~CellMatrix() {
     }
 
     delete[] matrix;
+    delete[] mine_locations;
 
 }

@@ -23,11 +23,13 @@ class CellMatrix{
         int get_num_cols();
         int get_num_rows();
         int get_num_mines();
+        int* get_mine_locations();
 
         void set_matrix(Cell **matrix);
         void set_num_cols(int num_cols);
         void set_num_rows(int num_rows);
         void set_num_mines(int num_mines);
+        void set_mine_locations(int *mine_locations);
 
 
         ~CellMatrix();
