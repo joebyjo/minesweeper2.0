@@ -52,10 +52,10 @@ void CellMatrix::set_gameboard() {
         if (!(check_if_member(location))) { mine_locations[i] = location;} 
         else { i--; };
 
-        int row = location % num_cols;
-        int col = location / num_cols;
+        int col = location % num_cols;
+        int row = location / num_cols;
 
-        matrix[location] = new Mine(row*CELL_SIZE, col*CELL_SIZE);
+        matrix[location] = new Mine(col, row);
         
     }
 
@@ -65,7 +65,7 @@ void CellMatrix::set_gameboard() {
         
             // initialising all non-mine elements of matrix with Cell()
             if (matrix[i*num_cols + j] == nullptr){
-                matrix[i*num_cols + j] = new Empty(j*CELL_SIZE, i*CELL_SIZE);
+                matrix[i*num_cols + j] = new Empty(j, i);
                 // std::cout << "O ";
             } else {
                 // std::cout << "X ";

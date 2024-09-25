@@ -15,7 +15,7 @@ Cell::Cell(int x, int y){
     this->is_reveal = false;
 
     cell->setSize(Vector2f(CELL_SIZE,CELL_SIZE));
-    cell->setPosition(location[0], location[1]);
+    cell->setPosition(location[0]*CELL_SIZE, location[1]*CELL_SIZE);
     cell->setFillColor(CELL_COLOR_1);
     // cell->setOutlineColor(Color:: Black);
     // cell->setOutlineThickness(1);
