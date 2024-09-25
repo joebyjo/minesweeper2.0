@@ -68,16 +68,26 @@ void CellMatrix::set_gameboard() {
             } else {
                 // std::cout << "X ";
             }
+            
+        }
+        // std::cout << std::endl;
+    }
+    
+    display_overlay();
 
+}
+
+void CellMatrix::display_overlay() {
+    for (int i = 0; i < num_rows; i++){
+        for (int j = 0; j < num_cols; j++){
             // alternating colors
             if (((j%2== 0) && (i%2==0)) || ((j%2==1) && (i%2==1))){ 
                 matrix[i*num_cols + j]->set_color(CELL_COLOR_2); } 
             else { 
                 matrix[i*num_cols + j]->set_color(CELL_COLOR_1); } 
-
         }
-        // std::cout << std::endl;
     }
+
 }
 
 // get matrix

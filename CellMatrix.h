@@ -17,6 +17,7 @@ class CellMatrix{
         CellMatrix(int num_rows, int num_cols);
         void display(RenderWindow *game_window);
         void set_gameboard(); // set the game board to the type of cell
+        void display_overlay(); // displays the overlaying checkerboard
 
         // getters and setters
         Cell** get_matrix();
