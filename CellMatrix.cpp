@@ -3,6 +3,8 @@
 #include "CellMatrix.h"
 #include "Constants.h"
 #include "Mine.h"
+#include "Empty.h"
+#include "Number.h"
 
 CellMatrix::CellMatrix(int num_rows, int num_cols) {
 
@@ -63,12 +65,11 @@ void CellMatrix::set_gameboard() {
         
             // initialising all non-mine elements of matrix with Cell()
             if (matrix[i*num_cols + j] == nullptr){
-                matrix[i*num_cols + j] = new Cell(j*CELL_SIZE, i*CELL_SIZE);
+                matrix[i*num_cols + j] = new Empty(j*CELL_SIZE, i*CELL_SIZE);
                 // std::cout << "O ";
             } else {
                 // std::cout << "X ";
             }
-            
         }
         // std::cout << std::endl;
     }

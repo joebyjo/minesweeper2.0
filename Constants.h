@@ -31,8 +31,8 @@ const int RANDOM_SEED = 0; // time(0);
 // Colors
 const Color CELL_COLOR_1 = Color(170, 215, 81);
 const Color CELL_COLOR_2 = Color(147, 203, 57);
-const Color EMPTY_COLOR_LIGHT = Color(232,188,148);
-const Color EMPTY_COLOR_DARK = Color(212,188,156);
+const Color EMPTY_COLOR_LIGHT = Color(229,194,159);
+const Color EMPTY_COLOR_DARK = Color(215,184,153);
 const Color NUMBER_COLOR = Color(0, 0, 255);
 const Color MINE_COLOR = Color(255, 0, 0);
 
