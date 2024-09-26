@@ -18,9 +18,6 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
 
     num_mines = NUM_OF_MINES;
 
-    // creating array to store location of mines
-    mine_locations = new int[num_mines];
-
     // initialising initially with nullptr
     for (int i = 0; i < num_rows*num_cols; i++) {
             matrix[i] = nullptr;
@@ -38,8 +35,8 @@ void CellMatrix::set_gameboard() {
     srand(RANDOM_SEED);
 
     auto check_if_member = [&](int num) {
-        for (int i = 0; i < num_mines; ++i) {
-            if (mine_locations[i] == num) {
+        for (int j = 0; j < mine_locations.size(); j++) {
+            if (mine_locations.at(j) == num) {
                 return true;
             }
         }
@@ -47,10 +44,10 @@ void CellMatrix::set_gameboard() {
     };
 
     // initialising all mines into the matrix randomly
-    for (int i=0; i< num_mines; i++) {
+    for (int i=0; i < num_mines; i++) {
         int location = rand() % (num_rows * num_cols);
 
-        if (!(check_if_member(location))) { mine_locations[i] = location;} 
+        if (!(check_if_member(location))) { mine_locations.push_back(location);} 
         else { i--; };
 
         int col = location % num_cols;
@@ -121,7 +118,7 @@ int CellMatrix::get_num_mines() {
     return this->num_mines; 
 }
 
-int* CellMatrix::get_mine_locations() {
+vector<int> CellMatrix::get_mine_locations() {
     return this->mine_locations;
 }
 
@@ -146,7 +143,7 @@ void CellMatrix::set_num_mines(int num_mines) {
 }
 
 // set mine locations
-void CellMatrix::set_mine_locations(int *mine_locations) {
+void CellMatrix::set_mine_locations(vector<int> mine_locations) {
     this->mine_locations = mine_locations;
 }
 
@@ -158,6 +155,4 @@ CellMatrix:: ~CellMatrix() {
     }
 
     delete[] matrix;
-    delete[] mine_locations;
-
 }
