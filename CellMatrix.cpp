@@ -92,6 +92,12 @@ void CellMatrix::display_overlay() {
 
 }
 
+void CellMatrix::reveal_all_cells() {
+    for (int i = 0; i < num_rows*num_cols; i++){
+        matrix[i]->reveal(this);
+    }
+}
+
 // game over function
 void CellMatrix::game_over() {}
 

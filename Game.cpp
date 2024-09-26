@@ -13,7 +13,10 @@ Game::Game(int num_cols, int num_rows) {
 void Game::run() {
 
     // setting mines randomly
-    game_matrix->set_gameboard(); 
+    game_matrix->set_gameboard();
+
+    // reveal all cells for testing purposes
+    // game_matrix->reveal_all_cells();
 
     // running the window
     while (game_window->isOpen()){

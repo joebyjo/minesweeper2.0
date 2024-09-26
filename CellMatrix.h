@@ -21,6 +21,7 @@ class CellMatrix{
         void display(RenderWindow *game_window);
         void set_gameboard(); // set the game board to the type of cell
         void display_overlay(); // displays the overlaying checkerboard
+        void reveal_all_cells(); // reveals all the cells (used for development)
         void game_over();
 
         // getters and setters
