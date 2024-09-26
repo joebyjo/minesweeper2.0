@@ -38,5 +38,5 @@ void Mine::delete_mine(CellMatrix* game_matrix) {
     // appending the num_mines by -1
     game_matrix->set_num_mines(game_matrix->get_num_mines() - 1);
 
-    cout << game_matrix->get_num_mines() << endl;
+    // Testing:  cout << game_matrix->get_num_mines() << endl; 
 }

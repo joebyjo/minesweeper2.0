@@ -57,6 +57,9 @@ void CellMatrix::set_gameboard() {
         
     }
 
+    // // testing purposes setting one cell as number
+    // matrix[0] = new Number(0, 0);
+
     // initialising each cells into the matrix
     for (int i = 0; i < num_rows; i++){
         for (int j = 0; j < num_cols; j++){   
