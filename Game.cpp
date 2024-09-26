@@ -16,7 +16,7 @@ void Game::run() {
     game_matrix->set_gameboard();
 
     // reveal all cells for testing purposes
-    game_matrix->reveal_all_cells();
+    // game_matrix->reveal_all_cells();
 
     // running the window
     while (game_window->isOpen()){

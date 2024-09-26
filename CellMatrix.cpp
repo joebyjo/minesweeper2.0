@@ -96,7 +96,7 @@ void CellMatrix::reveal_all_cells() {
 }
 
 // game over function
-void CellMatrix::game_over() {}
+void CellMatrix::game_over() {cout << "Game Over" << endl;}
 
 // get matrix
 Cell** CellMatrix:: get_matrix() {

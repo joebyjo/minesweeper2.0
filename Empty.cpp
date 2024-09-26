@@ -15,27 +15,26 @@ Empty::Empty(int x, int y): Cell(x, y) {
 
 void Empty::on_revealed(CellMatrix* game_matrix) {
 
-    // int index_temp = 0;
-    // string type_temp = "\0";
-    // for (int i  = -1; i < 2 && !(location[1] + i > game_matrix->get_num_rows() - 1); i++){
-    //     for (int j = -1; j < 2 && !(location[0] + i > game_matrix->get_num_cols() - 1); j++){
-            
-    //         // checking the cell doesn't got out of game board
-    //         if (!(location[1] + i < 0) || !(location[0] + j < 0)){
-    //             continue;
-    //         }
+    int index_temp = 0;
 
-    //          // storing the type of cell in it
-    //         index_temp = (this->location[1] + i) * game_matrix->get_num_cols() + (this->location[0] + j);
-    //         type_temp = (game_matrix->get_matrix()[index_temp])->get_type();
-
-    //         if (type == "empty"){
-    //             game_matrix->get_matrix()[index_temp]->reveal(game_matrix);
-    //         }
-    //         else if(type == "number"){
-    //             game_matrix->get_matrix()[index_temp]->reveal(game_matrix);
-    //         }
+    for (int row  = this->location[1] - 1; (row < this->location[1] + 2) && (row < game_matrix->get_num_rows()); row++){
+        for (int col = this->location[0] - 1; (col < this->location[0] + 2) && (col < game_matrix->get_num_cols()); col++){
             
-    //     }
-    // }
+            // checking the cell doesn't got out of game board 0,0
+            if (row < 0 || col < 0){
+                continue;
+            }
+
+             // storing the index of cell in it
+            index_temp = row * game_matrix->get_num_cols() + col;
+
+            if ((game_matrix->get_matrix()[index_temp])->get_type() == "empty"){
+                game_matrix->get_matrix()[index_temp]->reveal(game_matrix);
+            }
+            else if((game_matrix->get_matrix()[index_temp])->get_type() == "number"){
+                game_matrix->get_matrix()[index_temp]->reveal(game_matrix);
+            }
+            
+        }
+    }
 }

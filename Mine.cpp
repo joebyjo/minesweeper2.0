@@ -12,7 +12,7 @@ Mine::Mine(int x, int y): Cell(x, y) {
 void Mine::on_revealed(CellMatrix* game_matrix) {
 
     // deleting the mine from the game
-    // this->delete_mine(game_matrix);
+    this->delete_mine(game_matrix);
      
     // calling the game over function
     game_matrix->game_over();
@@ -29,10 +29,14 @@ void Mine::delete_mine(CellMatrix* game_matrix) {
 
         if (mine_locations.at(i) == cell_location){
             // swapping the location with the last index
-            swap(game_matrix->get_matrix()[cell_location], game_matrix->get_matrix()[game_matrix->get_num_mines() - 1]);
+            swap(mine_locations.at(i), mine_locations.at(mine_locations.size() - 1));
         }
     }
     
+    // setting the new vector in the cell matrix
+    game_matrix->set_mine_locations(mine_locations);
     // appending the num_mines by -1
     game_matrix->set_num_mines(game_matrix->get_num_mines() - 1);
+
+    cout << game_matrix->get_num_mines() << endl;
 }
