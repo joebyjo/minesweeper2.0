@@ -6,10 +6,10 @@ Number::Number(int x, int y): Cell(x, y) {
 
     number_texture = Texture();
     number_cell = new Sprite();
-    number_texture.loadFromFile("texture/num1.png");  // "texture/num"+std::to_string(1) + ".png"
-    number_cell->setTexture(number_texture);
-
     this->neighboring_mine_count = 1;
+
+    number_texture.loadFromFile("texture/num"+to_string(neighboring_mine_count)+".png");
+    number_cell->setTexture(number_texture);
 
     // scaling to fit the sprite into the cell
     number_cell->setScale(
@@ -32,6 +32,8 @@ Number::Number(int x, int y): Cell(x, y) {
 // increment mine_count
 void Number:: increment_mine_count() {
     this->neighboring_mine_count +=1;
+    number_texture.loadFromFile("texture/num"+to_string(neighboring_mine_count)+".png");
+    number_cell->setTexture(number_texture);
 }
 
 // override the draw function to draw the cell and the sprite

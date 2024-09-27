@@ -57,8 +57,38 @@ void CellMatrix::set_gameboard() {
         
     }
 
-    // // testing purposes setting one cell as number
-    // matrix[0] = new Number(0, 0);
+    // initialising all number cells into the matrix
+    for (int i = 0; i < mine_locations.size(); i++) {
+        int location = mine_locations[i];
+        int col = location % num_cols;
+        int row = location / num_cols;
+
+        // Check all neighboring cells (8 neighbors)
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                int neighbor_row = row + dy;
+                int neighbor_col = col + dx;
+
+                // Skip if the current cell is the mine itself
+                if (dx == 0 && dy == 0) {
+                    continue;
+                }
+
+                // Check if the neighbor is within bounds
+                if (neighbor_row >= 0 && neighbor_row < num_rows && neighbor_col >= 0 && neighbor_col < num_cols) {
+                    int neighbor_index = neighbor_row * num_cols + neighbor_col;
+
+                    // Initialize with Number if it's a nullptr
+                    if (matrix[neighbor_index] == nullptr) {
+                        matrix[neighbor_index] = new Number(neighbor_col, neighbor_row);
+                    } else if (matrix[neighbor_index]->get_type() == "number") {
+                        // If it's already a Number, increment the mine count
+                        static_cast<Number*>(matrix[neighbor_index])->increment_mine_count();
+                    }
+                }
+            }
+        }
+    }
 
     // initialising each empty cells into the matrix
     for (int i = 0; i < num_rows; i++){
