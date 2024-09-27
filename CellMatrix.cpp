@@ -60,7 +60,7 @@ void CellMatrix::set_gameboard() {
         
     }
 
-    // initialising each cells into the matrix
+    // initialising each empty cells into the matrix
     for (int i = 0; i < num_rows; i++){
         for (int j = 0; j < num_cols; j++){   
         

@@ -22,7 +22,7 @@ class Cell{
     public:
         Cell(int x, int y); // constructor
 
-        void draw(RenderWindow *game_window); // drawing the object on window
+        virtual void draw(RenderWindow *game_window); // drawing the object on window
         virtual void reveal(CellMatrix *game_matrix); // changing the color to the desiginated cell color
         virtual void on_revealed(CellMatrix *game_matrix) = 0; // owriting function
         
