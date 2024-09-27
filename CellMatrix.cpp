@@ -16,7 +16,7 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
     // creating the 2D array of cells pointer
     matrix = new Cell*[num_rows * num_cols]; 
 
-    num_mines = NUM_OF_MINES;
+    num_mines = num_rows * num_cols * PERCENTAGE_MINES;
 
     // initialising initially with nullptr
     for (int i = 0; i < num_rows*num_cols; i++) {
@@ -57,37 +57,37 @@ void CellMatrix::set_gameboard() {
         
     }
 
+    int index_temp, x, y = 0;
+
     // initialising all number cells into the matrix
     for (int i = 0; i < mine_locations.size(); i++) {
-        int location = mine_locations[i];
-        int col = location % num_cols;
-        int row = location / num_cols;
 
-        // Check all neighboring cells (8 neighbors)
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                int neighbor_row = row + dy;
-                int neighbor_col = col + dx;
+        // getting x and y of mine
+        x = mine_locations[i] % num_cols;
+        y = mine_locations[i] / num_cols;
 
-                // Skip if the current cell is the mine itself
-                if (dx == 0 && dy == 0) {
+        for (int row  = y - 1; (row < y + 2) && (row < get_num_rows()); row++){
+            for (int col = x - 1; (col < x + 2) && (col < get_num_cols()); col++){
+            
+                // checking the cell doesn't got out of game board 0,0
+                if (row < 0 || col < 0){
                     continue;
                 }
 
-                // Check if the neighbor is within bounds
-                if (neighbor_row >= 0 && neighbor_row < num_rows && neighbor_col >= 0 && neighbor_col < num_cols) {
-                    int neighbor_index = neighbor_row * num_cols + neighbor_col;
+                // storing the index of cell in it
+                index_temp = row * get_num_cols() + col;
 
-                    // Initialize with Number if it's a nullptr
-                    if (matrix[neighbor_index] == nullptr) {
-                        matrix[neighbor_index] = new Number(neighbor_col, neighbor_row);
-                    } else if (matrix[neighbor_index]->get_type() == "number") {
-                        // If it's already a Number, increment the mine count
-                        static_cast<Number*>(matrix[neighbor_index])->increment_mine_count();
-                    }
+                // Initialize with Number if it's a nullptr
+                if (matrix[index_temp] == nullptr) {
+                    matrix[index_temp] = new Number(col, row);
+                } else if (matrix[index_temp]->get_type() == "number") {
+                    // If it's already a Number, increment the mine count
+                    static_cast<Number*>(matrix[index_temp])->increment_mine_count();
                 }
+            
             }
         }
+
     }
 
     // initialising each empty cells into the matrix
