@@ -28,6 +28,9 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
 void CellMatrix::display(RenderWindow *game_window) {
     for (int i = 0; i < num_rows*num_cols; i++) {
             matrix[i]->draw(game_window);  
+            if (matrix[i]->get_is_flagged()) {
+                game_window->draw(matrix[i]->get_flag_cell());
+            }
     }
 }
 
