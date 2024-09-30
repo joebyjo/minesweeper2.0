@@ -11,14 +11,19 @@ Number::Number(int x, int y): Cell(x, y) {
     number_texture.loadFromFile("texture/num"+to_string(neighboring_mine_count)+".png");
     number_cell->setTexture(number_texture);
 
+    float padding = NUMBER_CELL_PADDING;
+
     // scaling to fit the sprite into the cell
     number_cell->setScale(
-        CELL_SIZE / float (number_texture.getSize().x),
-        CELL_SIZE / float (number_texture.getSize().y)
+        (CELL_SIZE - padding) / float(number_texture.getSize().x),
+        (CELL_SIZE - padding) / float(number_texture.getSize().y)
     );
 
-    cell->setSize(Vector2f(CELL_SIZE,CELL_SIZE));
-    number_cell->setPosition(location[0]*CELL_SIZE, location[1]*CELL_SIZE);
+    // centering the sprite within the cell
+    number_cell->setPosition(
+        location[0] * CELL_SIZE + (padding / 2),
+        location[1] * CELL_SIZE + (padding / 2)
+    );
 
     // alternate cell
     if (((x%2== 0) && (y%2==0)) || ((x%2==1) && (y%2==1))){ 

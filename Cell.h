@@ -17,7 +17,10 @@ class Cell{
         int *location;
         Color color;
         bool is_reveal;
+        bool is_flagged;
         string type;
+        Texture flag_texture;
+        Sprite flag_cell;
 
     public:
         Cell(int x, int y); // constructor
@@ -25,6 +28,7 @@ class Cell{
         virtual void draw(RenderWindow *game_window); // drawing the object on window
         virtual void reveal(CellMatrix *game_matrix); // changing the color to the desiginated cell color
         virtual void on_revealed(CellMatrix *game_matrix) = 0; // owriting function
+        void flag(RenderWindow *game_window);
         
 
         // getters and setters 
@@ -32,6 +36,9 @@ class Cell{
         int *get_location();
         Color get_color();
         string get_type();
+        bool get_is_reveal();
+        bool get_is_flagged();
+        Sprite get_flag_cell();
 
         void set_cell(RectangleShape *cell);
         void set_location(int *location);

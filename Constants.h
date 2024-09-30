@@ -18,6 +18,8 @@ const int NUM_OF_COLS = 25;
 // number of mines
 const float PERCENTAGE_MINES = 0.1;
 
+// padding
+const float NUMBER_CELL_PADDING = 7.5;
 
 // title of window
 const string WINDOW_TITLE = "MINESWEEPER";
