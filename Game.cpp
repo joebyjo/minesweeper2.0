@@ -53,6 +53,10 @@ void Game::run() {
                     game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->flag(game_window);
                     
                 }
+            } else if (event.type == Event::KeyPressed) {
+                if (event.key.code == Keyboard::Escape) {
+                    game_window->close();
+                }
             }
 
 
