@@ -4,6 +4,20 @@
 #include <vector>
 
 Mine::Mine(int x, int y): Cell(x, y) {
+    mine_texture = Texture();
+    mine_cell = Sprite();
+
+    mine_texture.loadFromFile("texture/mine.png");
+    mine_cell.setTexture(mine_texture);
+
+    // scaling to fit the sprite into the cell
+    mine_cell.setScale(
+        CELL_SIZE / float (mine_texture.getSize().x),
+        CELL_SIZE / float (mine_texture.getSize().y)
+    );
+
+    mine_cell.setPosition(location[0]*CELL_SIZE, location[1]*CELL_SIZE);
+
     this->color = MINE_COLOR;
     this->type = "mine";
 }
@@ -16,6 +30,14 @@ void Mine::on_revealed(CellMatrix* game_matrix) {
      
     // calling the game over function
     game_matrix->game_over();
+}
+
+// override the draw function to draw the cell and the sprite
+void Mine::draw(RenderWindow* game_window) {
+    Cell::draw(game_window);
+    if (is_reveal) {
+        game_window->draw(mine_cell);
+    }
 }
 
 void Mine::delete_mine(CellMatrix* game_matrix) {

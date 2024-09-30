@@ -21,6 +21,8 @@ const int NUM_OF_CELLS = NUM_OF_ROWS * NUM_OF_COLS;
 // number of mines
 const int NUM_OF_MINES = NUM_OF_CELLS * 0.1;
 
+// padding
+const float NUMBER_CELL_PADDING = 7.5;
 
 // title of window
 const string WINDOW_TITLE = "MINESWEEPER";
