@@ -29,8 +29,12 @@ void Game::run() {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
-                    int mouseX = mousePos.x;
-                    int mouseY = mousePos.y;
+
+                    // ensure resizing window doesnt change coords
+                    sf::Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+                    
+                    int mouseX = worldPos.x;
+                    int mouseY = worldPos.y;
 
                     int cell_index_x = mouseX / CELL_SIZE;
                     int cell_index_y = mouseY / CELL_SIZE;
@@ -43,8 +47,12 @@ void Game::run() {
                 else if (event.mouseButton.button == sf::Mouse::Right) {
 
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
-                    int mouseX = mousePos.x;
-                    int mouseY = mousePos.y;
+
+                    // ensure resizing window doesnt change coords
+                    sf::Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+                    
+                    int mouseX = worldPos.x;
+                    int mouseY = worldPos.y;
 
                     int cell_index_x = mouseX / CELL_SIZE;
                     int cell_index_y = mouseY / CELL_SIZE;
