@@ -49,10 +49,7 @@ void Number::draw(RenderWindow* game_window) {
     }
 }
 
-void Number::on_revealed(CellMatrix* game_matrix) {
-    this->is_reveal = true;
-    this->set_color(this->color);
-}
+void Number::on_revealed(CellMatrix* game_matrix) {}
 
 // getters
 Texture Number::get_number_texture() {
