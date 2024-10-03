@@ -50,8 +50,6 @@ void Number::draw(RenderWindow* game_window) {
 }
 
 void Number::on_revealed(CellMatrix* game_matrix) {
-    this->is_reveal = true;
-    this->set_color(this->color);
 }
 
 // getters
