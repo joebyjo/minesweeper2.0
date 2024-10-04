@@ -12,14 +12,11 @@ using namespace sf;
 const int CELL_SIZE = 50;
 
 // dimension of game board
-const int NUM_OF_ROWS = 15;
-const int NUM_OF_COLS = 20;
-
-// number of cells
-const int NUM_OF_CELLS = NUM_OF_ROWS * NUM_OF_COLS;
+const int NUM_OF_ROWS = 10;
+const int NUM_OF_COLS = 25;
 
 // number of mines
-const int NUM_OF_MINES = NUM_OF_CELLS * 0.1;
+const float PERCENTAGE_MINES = 0.1;
 
 // padding
 const float NUMBER_CELL_PADDING = 7.5;
@@ -28,7 +25,7 @@ const float NUMBER_CELL_PADDING = 7.5;
 const string WINDOW_TITLE = "MINESWEEPER";
 
 // random seed
-const int RANDOM_SEED = 0; // time(0);
+const int RANDOM_SEED = time(0);
 
 // Colors
 const Color CELL_COLOR_1 = Color(170, 215, 81);
