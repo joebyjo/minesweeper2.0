@@ -17,7 +17,7 @@ Cell::Cell(int x, int y){
 
     // setting up flag and texture
     this->is_flagged = false;
-    flag_texture.loadFromFile("texture/flag.png");
+    flag_texture.loadFromFile(ASSETS_PATH+"flag.png");
     flag_cell.setTexture(flag_texture);
 
     flag_cell.setScale(

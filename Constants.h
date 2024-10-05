@@ -41,4 +41,7 @@ const Color EMPTY_COLOR_DARK = Color(215,184,153);
 const Color NUMBER_COLOR = Color(0, 0, 255);
 const Color MINE_COLOR = Color(255, 0, 0);
 
+// Assets path
+const string ASSETS_PATH = "assets/";
+
 #endif

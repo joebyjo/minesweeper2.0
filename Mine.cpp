@@ -7,7 +7,7 @@ Mine::Mine(int x, int y): Cell(x, y) {
     mine_texture = Texture();
     mine_cell = Sprite();
 
-    mine_texture.loadFromFile("texture/mine.png");
+    mine_texture.loadFromFile(ASSETS_PATH+"mine.png");
     mine_cell.setTexture(mine_texture);
 
     // scaling to fit the sprite into the cell

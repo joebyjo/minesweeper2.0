@@ -8,7 +8,7 @@ Number::Number(int x, int y): Cell(x, y) {
     number_cell = new Sprite();
     this->neighboring_mine_count = 1;
 
-    number_texture.loadFromFile("texture/num"+to_string(neighboring_mine_count)+".png");
+    number_texture.loadFromFile(ASSETS_PATH+"num"+to_string(neighboring_mine_count)+".png");
     number_cell->setTexture(number_texture);
 
     float padding = NUMBER_CELL_PADDING;
@@ -37,7 +37,7 @@ Number::Number(int x, int y): Cell(x, y) {
 // increment mine_count
 void Number:: increment_mine_count() {
     this->neighboring_mine_count +=1;
-    number_texture.loadFromFile("texture/num"+to_string(neighboring_mine_count)+".png");
+    number_texture.loadFromFile(ASSETS_PATH+"num"+to_string(neighboring_mine_count)+".png");
     number_cell->setTexture(number_texture);
 }
 
