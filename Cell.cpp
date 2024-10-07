@@ -45,6 +45,7 @@ void Cell::reveal(CellMatrix *game_matrix) {
         this->is_reveal = true;
         this->set_color(this->color); // changing color
         this->on_revealed(game_matrix); // calling the unique function
+        game_matrix->increment_revealed();
     }
 }
 

@@ -75,17 +75,29 @@ void Game::run() {
 
         game_window->clear();
 
-        // if game is over, reveal mines with animation
-        if (game_matrix->get_gameover() && (current_mine_index < game_matrix->get_mine_locations().size())) {
+        // if game is over, reveal mines with animation, if game won, show mine locations with animation
+        if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
+            (current_mine_index < game_matrix->get_mine_locations().size())) {
+            
             if (reveal_clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
                 int location = game_matrix->get_mine_locations()[current_mine_index];
+                Cell* mine = game_matrix->get_matrix()[location];
 
-                // reveal mine if not already revealed
-                if (!game_matrix->get_matrix()[location]->get_is_reveal()) {
-                    game_matrix->get_matrix()[location]->reveal(game_matrix);
+                // animate depending on win or lose
+                if (game_matrix->get_gameover()) {
+                    // unflag and reveal mine
+                    if (!mine->get_is_reveal()) {
+                        if (mine->get_is_flagged()) {
+                            mine->flag(game_window);
+                        }
+                        mine->reveal(game_matrix);
+                    }
+                } else if (game_matrix->check_game_win()) {
+                    if (!mine->get_is_reveal()) {
+                        mine->set_color(Color::White);
+                    }
                 }
 
-                // reset clock and increment counter
                 current_mine_index++;
                 reveal_clock.restart();
             }

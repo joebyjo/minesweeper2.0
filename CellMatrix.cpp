@@ -24,6 +24,7 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
     }
 
     is_gameover = false;
+    revealed_cells =0;
 }
 
 void CellMatrix::display(RenderWindow *game_window) {
@@ -130,6 +131,19 @@ void CellMatrix::reveal_all_cells() {
     for (int i = 0; i < num_rows*num_cols; i++){
         matrix[i]->reveal(this);
     }
+}
+
+void CellMatrix::increment_revealed() {
+    this->revealed_cells++;
+}
+
+bool CellMatrix::check_game_win() {
+
+    if (revealed_cells== ((num_cols*num_rows)-num_mines)) {
+        return true;
+    }
+
+    return false;
 }
 
 // game over function
