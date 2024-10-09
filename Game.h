@@ -19,6 +19,8 @@ class Game{
     public:
         Game(int num_cols, int num_rows);
         void run();
+        void mainMenu(sf::RenderWindow* window);
+
 
         // getters and setters
         RenderWindow* get_game_window();

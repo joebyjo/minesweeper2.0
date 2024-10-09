@@ -10,6 +10,122 @@ Game::Game(int num_cols, int num_rows) {
     game_matrix = new CellMatrix(num_rows, num_cols); 
 }
 
+void Game::mainMenu(RenderWindow* window) {
+
+    sf::Font font;
+    if (!font.loadFromFile("assets/BroncoPersonalUse.ttf")) {
+        std::cout << "Error loading font" << std::endl;
+        return;  
+    }
+
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("assets/thumbnail.gif")) {  // Update with your image path
+        std::cout << "Error loading background image" << std::endl;
+        return; 
+    }
+
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setPosition(0, 0); 
+
+    // buttons
+    sf::RectangleShape playButton(sf::Vector2f(125, 75));
+    playButton.setFillColor(sf::Color(70, 130, 180));
+    playButton.setPosition(500, 300);
+    playButton.setOutlineThickness(2);
+    playButton.setOutlineColor(sf::Color::White);
+
+    sf::RectangleShape howToPlayButton(sf::Vector2f(125, 75));
+    howToPlayButton.setFillColor(sf::Color(70, 130, 180));
+    howToPlayButton.setPosition(625, 425);
+    howToPlayButton.setOutlineThickness(2);
+    howToPlayButton.setOutlineColor(sf::Color::White);
+
+    sf::RectangleShape statsButton(sf::Vector2f(125, 75));
+    statsButton.setFillColor(sf::Color(70, 130, 180));
+    statsButton.setPosition(750, 550);
+    statsButton.setOutlineThickness(2);
+    statsButton.setOutlineColor(sf::Color::White);
+
+    // labels
+    sf::Text playGameText, howToPlayText, statsText;
+    playGameText.setFont(font);
+    playGameText.setString("Play");
+    playGameText.setCharacterSize(40);
+    playGameText.setFillColor(sf::Color::Black);
+    playGameText.setPosition(playButton.getPosition().x + 30, playButton.getPosition().y + 10);
+
+    howToPlayText.setFont(font);
+    howToPlayText.setString("Help");
+    howToPlayText.setCharacterSize(40);
+    howToPlayText.setFillColor(sf::Color::Black);
+    howToPlayText.setPosition(howToPlayButton.getPosition().x + 30, howToPlayButton.getPosition().y + 10);
+
+    statsText.setFont(font);
+    statsText.setString("Stats");
+    statsText.setCharacterSize(40);
+    statsText.setFillColor(sf::Color::Black);
+    statsText.setPosition(statsButton.getPosition().x + 30, statsButton.getPosition().y + 10);
+
+    // help text
+    sf::Text howToPlayInstructions;
+    howToPlayInstructions.setFont(font);
+    howToPlayInstructions.setString("How to Play:\n- Left click to reveal a cell.\n- Right click to flag a cell.\nPress Enter to return.");
+    howToPlayInstructions.setCharacterSize(24);
+    howToPlayInstructions.setFillColor(sf::Color::White);
+    howToPlayInstructions.setPosition(100, 150);
+
+    // status
+    bool isPlaying = false;
+    bool inMenu = true;
+    bool inHowToPlay = false;
+
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window->close();
+            }
+
+            if (inMenu && !isPlaying) {
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+                    if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        isPlaying = true;   // start the game
+                        inMenu = false;     
+                    } else if (howToPlayButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        inHowToPlay = true; // show help page
+                        inMenu = false;      
+                    }
+                }
+            }
+        }
+
+        window->clear(); 
+        // draw things
+        window->draw(backgroundSprite);
+        if (inMenu) {
+            window->draw(playButton);
+            window->draw(playGameText);
+            window->draw(howToPlayButton);
+            window->draw(howToPlayText);
+            window->draw(statsButton);
+            window->draw(statsText);
+        } else if (inHowToPlay) {
+            window->draw(howToPlayInstructions);
+        }
+
+        window->display();
+
+        if (isPlaying) {
+            run();  // start game in same window
+            inMenu = true;  
+            isPlaying = false;
+        }
+    }
+}
+
+
 void Game::run() {
 
     // setting mines randomly
