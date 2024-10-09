@@ -17,7 +17,7 @@ Cell::Cell(int x, int y){
 
     // setting up flag and texture
     this->is_flagged = false;
-    flag_texture.loadFromFile("texture/flag.png");
+    flag_texture.loadFromFile(ASSETS_PATH+"flag.png");
     flag_cell.setTexture(flag_texture);
 
     flag_cell.setScale(
@@ -45,6 +45,7 @@ void Cell::reveal(CellMatrix *game_matrix) {
         this->is_reveal = true;
         this->set_color(this->color); // changing color
         this->on_revealed(game_matrix); // calling the unique function
+        game_matrix->increment_revealed();
     }
 }
 

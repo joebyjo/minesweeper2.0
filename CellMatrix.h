@@ -18,6 +18,8 @@ class CellMatrix{
 
         vector<int> mine_locations; // storing location of mines in one array
         int num_mines; // storing the number of mines
+        int revealed_cells;
+        bool is_gameover;
 
     public:
         CellMatrix(int num_rows, int num_cols);
@@ -25,6 +27,8 @@ class CellMatrix{
         void set_gameboard(); // set the game board to the type of cell
         void display_overlay(); // displays the overlaying checkerboard
         void reveal_all_cells(); // reveals all the cells (used for development)
+        void increment_revealed();
+        bool check_game_win();
         void game_over();
 
         // getters and setters
@@ -33,12 +37,14 @@ class CellMatrix{
         int get_num_rows();
         int get_num_mines();
         vector<int> get_mine_locations();
+        bool get_gameover();
 
         void set_matrix(Cell **matrix);
         void set_num_cols(int num_cols);
         void set_num_rows(int num_rows);
         void set_num_mines(int num_mines);
         void set_mine_locations(vector<int> mine_locations);
+        void set_gameover(bool state);
 
 
         ~CellMatrix();

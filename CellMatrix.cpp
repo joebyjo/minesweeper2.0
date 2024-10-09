@@ -23,6 +23,8 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
             matrix[i] = nullptr;
     }
 
+    is_gameover = false;
+    revealed_cells =0;
 }
 
 void CellMatrix::display(RenderWindow *game_window) {
@@ -131,8 +133,23 @@ void CellMatrix::reveal_all_cells() {
     }
 }
 
+void CellMatrix::increment_revealed() {
+    this->revealed_cells++;
+}
+
+bool CellMatrix::check_game_win() {
+
+    if (revealed_cells== ((num_cols*num_rows)-num_mines)) {
+        return true;
+    }
+
+    return false;
+}
+
 // game over function
-void CellMatrix::game_over() {cout << "Game Over" << endl;}
+void CellMatrix::game_over() {
+    is_gameover = true;
+}
 
 // get matrix
 Cell** CellMatrix:: get_matrix() {
@@ -161,6 +178,14 @@ vector<int> CellMatrix::get_mine_locations() {
 // set matrix manually
 void CellMatrix:: set_matrix(Cell **matrix) {
     this->matrix = matrix;
+};
+
+void CellMatrix:: set_gameover(bool is_gameover) {
+    this->is_gameover = is_gameover;
+};
+
+bool CellMatrix::get_gameover() {
+    return is_gameover;
 };
 
 // set num of cols manually

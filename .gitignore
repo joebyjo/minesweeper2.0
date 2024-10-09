@@ -33,5 +33,4 @@
 
 # For mac
 .vscode/
-/.DS_Store
-texture/.DS_Store
+**/.DS_Store
