@@ -10,25 +10,23 @@ Game::Game(int num_cols, int num_rows) {
     game_matrix = new CellMatrix(num_rows, num_cols); 
 }
 
-void Game::mainMenu(RenderWindow* window) {
-
+void Game::mainMenu(sf::RenderWindow* window) {
     sf::Font font;
     if (!font.loadFromFile("assets/BroncoPersonalUse.ttf")) {
         std::cout << "Error loading font" << std::endl;
         return;  
     }
-
-    sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("assets/thumbnail.gif")) {  // Update with your image path
-        std::cout << "Error loading background image" << std::endl;
-        return; 
+    
+    // loading each frame of gif
+    sf::Texture textures[20];
+    for (int i = 0; i < 20; ++i) { 
+        if (!textures[i].loadFromFile("assets/frame" + std::to_string(i + 1) + ".gif")) { 
+            std::cout << "Error loading frame " << (i + 1) << std::endl;
+            return;
+        }
     }
 
-    sf::Sprite backgroundSprite;
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setPosition(0, 0); 
-
-    // buttons
+    // Creating buttons
     sf::RectangleShape playButton(sf::Vector2f(125, 75));
     playButton.setFillColor(sf::Color(70, 130, 180));
     playButton.setPosition(500, 300);
@@ -67,7 +65,7 @@ void Game::mainMenu(RenderWindow* window) {
     statsText.setFillColor(sf::Color::Black);
     statsText.setPosition(statsButton.getPosition().x + 30, statsButton.getPosition().y + 10);
 
-    // help text
+    // Help text
     sf::Text howToPlayInstructions;
     howToPlayInstructions.setFont(font);
     howToPlayInstructions.setString("How to Play:\n- Left click to reveal a cell.\n- Right click to flag a cell.\nPress Enter to return.");
@@ -75,10 +73,15 @@ void Game::mainMenu(RenderWindow* window) {
     howToPlayInstructions.setFillColor(sf::Color::White);
     howToPlayInstructions.setPosition(100, 150);
 
-    // status
+    // Status
     bool isPlaying = false;
     bool inMenu = true;
     bool inHowToPlay = false;
+
+    // Frame timing
+    float frameDuration = 0.1f; 
+    sf::Clock frameClock;
+    int currentFrame = 0; // Index for current frame
 
     while (window->isOpen()) {
         sf::Event event;
@@ -91,19 +94,31 @@ void Game::mainMenu(RenderWindow* window) {
                 if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
                     if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                        isPlaying = true;   // start the game
+                        isPlaying = true;   // Start the game
                         inMenu = false;     
                     } else if (howToPlayButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                        inHowToPlay = true; // show help page
+                        inHowToPlay = true; // Show help page
                         inMenu = false;      
+                    } else if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        std::cout << "Stats button clicked!" << std::endl;
                     }
                 }
             }
         }
 
-        window->clear(); 
-        // draw things
+        // updating current frame
+        if (frameClock.getElapsedTime().asSeconds() >= frameDuration) {
+            currentFrame = (currentFrame + 1) % 20;
+            frameClock.restart();
+        }
+
+        window->clear(); // Clear the window
+
+        // draw stuff
+        sf::Sprite backgroundSprite;
+        backgroundSprite.setTexture(textures[currentFrame]);
         window->draw(backgroundSprite);
+
         if (inMenu) {
             window->draw(playButton);
             window->draw(playGameText);
@@ -118,13 +133,12 @@ void Game::mainMenu(RenderWindow* window) {
         window->display();
 
         if (isPlaying) {
-            run();  // start game in same window
+            run();  // Start game in same window
             inMenu = true;  
             isPlaying = false;
         }
     }
 }
-
 
 void Game::run() {
 
