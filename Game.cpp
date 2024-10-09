@@ -7,7 +7,7 @@ Game::Game(int num_cols, int num_rows) {
     game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); 
     
     // creating the matrix of cells
-    game_matrix = new CellMatrix(num_rows, num_cols); 
+    game_matrix = new CellMatrix(num_rows, num_cols, game_window); 
 }
 
 void Game::run() {

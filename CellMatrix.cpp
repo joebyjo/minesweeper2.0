@@ -6,8 +6,9 @@
 #include "Mine.h"
 #include "Empty.h"
 #include "Number.h"
+#include "Powerup.h"
 
-CellMatrix::CellMatrix(int num_rows, int num_cols) {
+CellMatrix::CellMatrix(int num_rows, int num_cols, RenderWindow *game_window) {
 
     // updating value of matrix
     this->num_rows = num_rows;
@@ -24,7 +25,8 @@ CellMatrix::CellMatrix(int num_rows, int num_cols) {
     }
 
     is_gameover = false;
-    revealed_cells =0;
+    revealed_cells = 0;
+    this->game_window = game_window;
 }
 
 void CellMatrix::display(RenderWindow *game_window) {
@@ -182,11 +184,13 @@ void CellMatrix:: set_matrix(Cell **matrix) {
 
 void CellMatrix:: set_gameover(bool is_gameover) {
     this->is_gameover = is_gameover;
-};
+}
+RenderWindow *CellMatrix::set_game_window() { return this->game_window = game_window; };
 
 bool CellMatrix::get_gameover() {
     return is_gameover;
-};
+}
+RenderWindow *CellMatrix::get_game_window() { return this->game_window; };
 
 // set num of cols manually
 void CellMatrix:: set_num_cols(int num_cols){
