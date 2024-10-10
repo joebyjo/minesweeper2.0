@@ -22,6 +22,7 @@ class Mine: public Cell{
         void draw(RenderWindow* game_window);
         void on_revealed(CellMatrix *game_matrix); // owriting function
         void delete_mine(CellMatrix *game_matrix); // deleting the mine
+        void peek(RenderWindow* game_window); // for the xray function
 
         
 };

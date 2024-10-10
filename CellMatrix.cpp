@@ -39,6 +39,17 @@ void CellMatrix::display(RenderWindow *game_window) {
 }
 
 void CellMatrix::set_gameboard() {
+
+    set_mines(); // setting mines in the gameboard
+    set_numbers(); // setting numbers in gameboard
+    set_empty_cells(); // setting empty cells in gameboard
+    set_powerups(); // setting powerups in the gamebard
+
+    display_overlay(); // displaying the gameboard
+
+}
+
+void CellMatrix::set_mines() {
     srand(RANDOM_SEED);
 
     auto check_if_member = [&](int num) {
@@ -51,19 +62,20 @@ void CellMatrix::set_gameboard() {
     };
 
     // initialising all mines into the matrix randomly
-    for (int i=0; i < num_mines; i++) {
+    for (int i=0; i < num_mines; i++){
         int location = rand() % (num_rows * num_cols);
 
-        if (!(check_if_member(location))) { mine_locations.push_back(location);} 
+        if (!(check_if_member(location))) {mine_locations.push_back(location);} 
         else { i--; };
 
         int col = location % num_cols;
         int row = location / num_cols;
 
         matrix[location] = new Mine(col, row);
-        
     }
+}
 
+void CellMatrix::set_numbers() {
     int index_temp, x, y = 0;
 
     // initialising all number cells into the matrix
@@ -94,8 +106,10 @@ void CellMatrix::set_gameboard() {
             
             }
         }
-
     }
+}
+
+void CellMatrix::set_empty_cells() {
 
     // initialising each empty cells into the matrix
     for (int i = 0; i < num_rows; i++){
@@ -111,9 +125,47 @@ void CellMatrix::set_gameboard() {
         }
         // std::cout << std::endl;
     }
-    
-    display_overlay();
+}
 
+void CellMatrix::set_powerups() {
+
+    for (int i = 0; i < NUM_POWERUPS; i++){
+        
+        // setting the mine location in variable
+        int* location = matrix[mine_locations.at(i)]->get_location();
+
+        bool breakout = false;
+
+        for (int row  = location[1] - 1; (row < location[1] + 2) && (row < num_rows); row++){
+            for (int col = location[0] - 1; (col < location[0] + 2) && (col < num_cols); col++){
+            
+                // checking the cell doesn't got out of game board 0,0
+                if (row < 0 || col < 0){
+                    continue;
+                }
+
+                // storing the index of cell in it
+                int index_temp = row * num_cols + col;
+
+                // setting the number as power up
+                if (matrix[index_temp]->get_type() == "number"){
+
+                    // storing the number of mine into temp array
+                    int temp_numb = static_cast<Number*>(matrix[index_temp])->get_neighboring_mine_count();
+
+                    matrix[index_temp] = new Powerup(col, row);
+                    static_cast<Powerup*> (matrix[index_temp])->set_neighboring_mine_count(temp_numb);
+
+                    breakout = true;
+                    break;
+
+                }
+            
+            }
+
+            if(breakout){break;}
+        }
+    }
 }
 
 void CellMatrix::display_overlay() {

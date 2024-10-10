@@ -1,6 +1,9 @@
 #include "Powerup.h"
 #include "Constants.h"
+#include "Mine.h"
 #include "CellMatrix.h"
+#include <thread>  // for std::this_thread::sleep_for
+#include <chrono>  // for std::chrono::milliseconds
 
 Powerup::Powerup(int x, int y): Number(x, y) {
     this->color = POWERUP_COLOR;
@@ -9,7 +12,8 @@ Powerup::Powerup(int x, int y): Number(x, y) {
 
 // on_revealed function a vortual void function
 void Powerup::on_revealed(CellMatrix* game_matrix) {
-    supernumber(game_matrix);
+    xray(game_matrix);
+    // supernumber(game_matrix);
 }
 void Powerup::supernumber(CellMatrix* game_matrix) {
 
@@ -35,9 +39,28 @@ void Powerup::supernumber(CellMatrix* game_matrix) {
 }
 
 void Powerup::xray(CellMatrix* game_matrix) {
-    // game_matrix->reveal_all_cells();
+
+    // finding the location of mine and peeking
+    vector<int> mine_locations = game_matrix->get_mine_locations(); // storing the vector temperary
+
+    // refreshing screen to display the number cell
+    game_matrix->get_game_window()->clear();
+    game_matrix->display(game_matrix->get_game_window());
+    game_matrix->get_game_window()->display();
+
+    // Add a delay before displaying xray affect
+    std::this_thread::sleep_for(std::chrono::milliseconds(XRAY_DURATION)); // Delay of 1 second
+
+    // for loop to reveal every mine
+    for (int i : mine_locations){
+        static_cast<Mine*>(game_matrix->get_matrix()[i])->peek(game_matrix->get_game_window());
+    }
+
     // game_matrix->get_game_window()->clear();
-    // game_matrix->display();
+    game_matrix->get_game_window()->display();
+
+    // Add a delay to simulate x-ray effect
+    std::this_thread::sleep_for(std::chrono::milliseconds(XRAY_DURATION)); // Delay of 1 second
 }
 
 Powerup::~Powerup() {}

@@ -26,7 +26,7 @@ Mine::Mine(int x, int y): Cell(x, y) {
 void Mine::on_revealed(CellMatrix* game_matrix) {
 
     // deleting the mine from the game
-    this->delete_mine(game_matrix);
+    // this->delete_mine(game_matrix);
      
     // calling the game over function
     game_matrix->game_over();
@@ -61,4 +61,8 @@ void Mine::delete_mine(CellMatrix* game_matrix) {
     game_matrix->set_num_mines(game_matrix->get_num_mines() - 1);
 
     // Testing:  cout << game_matrix->get_num_mines() << endl; 
+}
+
+void Mine::peek(RenderWindow* game_window) {
+        game_window->draw(mine_cell);
 }

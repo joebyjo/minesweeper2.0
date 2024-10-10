@@ -21,6 +21,12 @@ const float PERCENTAGE_MINES = 0.1;
 // duration of animation in milliseconds
 const float ANIMATION_DURATION = 3000;
 
+// duration of Xray
+const int XRAY_DURATION = 2000;
+
+// number of Powerups in the game
+const int NUM_POWERUPS = 1;
+
 // delay between mine reveal in milliseconds
 const float ANIMATION_DELAY = ANIMATION_DURATION / (NUM_OF_COLS*NUM_OF_ROWS*PERCENTAGE_MINES);
 
