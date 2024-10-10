@@ -13,15 +13,21 @@ Game::Game(int num_cols, int num_rows) {
 void Game::mainMenu(RenderWindow* window) {
     Font font;
     if (!font.loadFromFile("assets/BroncoPersonalUse.ttf")) {
-        cout << "Error loading font" << endl;
-        return;  
+        return;
     }
-    
-    // loading each frame of gif
-    Texture textures[20];
-    for (int i = 0; i < 20; ++i) { 
-        if (!textures[i].loadFromFile("assets/frame" + to_string(i + 1) + ".gif")) { 
-            cout << "Error loading frame " << (i + 1) << endl;
+
+    // gif1 frames
+    Texture gif1Textures[20]; 
+    for (int i = 0; i < 20; ++i) {
+        if (!gif1Textures[i].loadFromFile("assets/gif1/g1f" + to_string(i + 1) + ".png")) {
+            return;
+        }
+    }
+
+    // gif2 frames
+    Texture gif2Textures[20];
+    for (int i = 0; i < 20; ++i) {
+        if (!gif2Textures[i].loadFromFile("assets/gif2/g2f" + to_string(i + 1) + ".png")) {
             return;
         }
     }
@@ -45,7 +51,7 @@ void Game::mainMenu(RenderWindow* window) {
     statsButton.setOutlineThickness(2);
     statsButton.setOutlineColor(Color::White);
 
-    // labels
+    // Labels
     Text playGameText, howToPlayText, statsText;
     playGameText.setFont(font);
     playGameText.setString("Play");
@@ -82,7 +88,7 @@ void Game::mainMenu(RenderWindow* window) {
     float frameDuration = 0.1f; 
     Clock frameClock;
     int currentFrame = 0; // Index for current frame
-
+    bool firstGifFinished = false;
     while (window->isOpen()) {
         Event event;
         while (window->pollEvent(event)) {
@@ -95,10 +101,10 @@ void Game::mainMenu(RenderWindow* window) {
                     Vector2i mousePos = Mouse::getPosition(*window);
                     if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         isPlaying = true;   // Start the game
-                        inMenu = false;     
+                        inMenu = false;
                     } else if (howToPlayButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         inHowToPlay = true; // Show help page
-                        inMenu = false;      
+                        inMenu = false;
                     } else if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         cout << "Stats button clicked!" << endl;
                     }
@@ -106,19 +112,31 @@ void Game::mainMenu(RenderWindow* window) {
             }
         }
 
-        // updating current frame
+        // update current frame
         if (frameClock.getElapsedTime().asSeconds() >= frameDuration) {
-            currentFrame = (currentFrame + 1) % 20;
-            frameClock.restart();
+            if (!firstGifFinished) {
+                currentFrame++;
+                if (currentFrame >= 20) {
+                    currentFrame = 0;  // reset for 2nd gif
+                    firstGifFinished = true;  // 1st gif done
+                }
+            } else {
+                currentFrame = (currentFrame + 1) % 20; // loop thru 2nd gif
+            }
+            frameClock.restart(); // keep playing 2nd gif
         }
 
-        window->clear(); // Clear the window
+        window->clear(MAIN_BG_COLOR);
 
-        // draw stuff
         Sprite backgroundSprite;
-        backgroundSprite.setTexture(textures[currentFrame]);
+        if (!firstGifFinished) {
+            backgroundSprite.setTexture(gif1Textures[currentFrame]); // draw 1st gif frame
+        } else {
+            backgroundSprite.setTexture(gif2Textures[currentFrame]); // draw 2nd gif frame
+        }
         window->draw(backgroundSprite);
 
+        // Draw buttons
         if (inMenu) {
             window->draw(playButton);
             window->draw(playGameText);
@@ -133,12 +151,13 @@ void Game::mainMenu(RenderWindow* window) {
         window->display();
 
         if (isPlaying) {
-            run();  // Start game in same window
-            inMenu = true;  
+            run();  // Start the game in the same window
+            inMenu = true;
             isPlaying = false;
         }
     }
 }
+
 
 void Game::run() {
 
