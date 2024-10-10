@@ -12,7 +12,7 @@ Game::Game(int num_cols, int num_rows) {
 
 void Game::mainMenu(RenderWindow* window) {
     Font font;
-    if (!font.loadFromFile("assets/BroncoPersonalUse.ttf")) {
+    if (!font.loadFromFile("assets/8bit.ttf")) {
         return;
     }
 
@@ -33,19 +33,19 @@ void Game::mainMenu(RenderWindow* window) {
     }
 
     // Creating buttons
-    RectangleShape playButton(Vector2f(125, 75));
+    RectangleShape playButton(Vector2f(175, 75));
     playButton.setFillColor(Color(70, 130, 180));
     playButton.setPosition(500, 300);
     playButton.setOutlineThickness(2);
     playButton.setOutlineColor(Color::White);
 
-    RectangleShape howToPlayButton(Vector2f(125, 75));
+    RectangleShape howToPlayButton(Vector2f(175, 75));
     howToPlayButton.setFillColor(Color(70, 130, 180));
     howToPlayButton.setPosition(625, 425);
     howToPlayButton.setOutlineThickness(2);
     howToPlayButton.setOutlineColor(Color::White);
 
-    RectangleShape statsButton(Vector2f(125, 75));
+    RectangleShape statsButton(Vector2f(200, 75));
     statsButton.setFillColor(Color(70, 130, 180));
     statsButton.setPosition(750, 550);
     statsButton.setOutlineThickness(2);
@@ -55,21 +55,21 @@ void Game::mainMenu(RenderWindow* window) {
     Text playGameText, howToPlayText, statsText;
     playGameText.setFont(font);
     playGameText.setString("Play");
-    playGameText.setCharacterSize(40);
+    playGameText.setCharacterSize(30);
     playGameText.setFillColor(Color::Black);
-    playGameText.setPosition(playButton.getPosition().x + 30, playButton.getPosition().y + 10);
+    playGameText.setPosition(playButton.getPosition().x + 30, playButton.getPosition().y + 25);
 
     howToPlayText.setFont(font);
     howToPlayText.setString("Help");
-    howToPlayText.setCharacterSize(40);
+    howToPlayText.setCharacterSize(30);
     howToPlayText.setFillColor(Color::Black);
-    howToPlayText.setPosition(howToPlayButton.getPosition().x + 30, howToPlayButton.getPosition().y + 10);
+    howToPlayText.setPosition(howToPlayButton.getPosition().x + 30, howToPlayButton.getPosition().y + 25);
 
     statsText.setFont(font);
     statsText.setString("Stats");
-    statsText.setCharacterSize(40);
+    statsText.setCharacterSize(30);
     statsText.setFillColor(Color::Black);
-    statsText.setPosition(statsButton.getPosition().x + 30, statsButton.getPosition().y + 10);
+    statsText.setPosition(statsButton.getPosition().x + 30, statsButton.getPosition().y + 25);
 
     // Help text
     Text howToPlayInstructions;
@@ -95,8 +95,35 @@ void Game::mainMenu(RenderWindow* window) {
             if (event.type == Event::Closed) {
                 window->close();
             }
-
+    
             if (inMenu && !isPlaying) {
+                Vector2i mousePos = Mouse::getPosition(*window);
+
+                // hover effect
+                if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    playButton.setFillColor(Color(BUTTON_COLOR));  
+                    playButton.setOutlineColor(Color::Black);      
+                } else {
+                    playButton.setFillColor(Color(BUTTON_COLOR.r-30, BUTTON_COLOR.g-10, BUTTON_COLOR.b-10));   
+                    playButton.setOutlineColor(Color::White);      
+                }
+
+                if (howToPlayButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    howToPlayButton.setFillColor(Color(BUTTON_COLOR));
+                    howToPlayButton.setOutlineColor(Color::Black);
+                } else {
+                    howToPlayButton.setFillColor(Color(BUTTON_COLOR.r-30, BUTTON_COLOR.g-10, BUTTON_COLOR.b-10));   
+                    howToPlayButton.setOutlineColor(Color::White);
+                }
+
+                if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    statsButton.setFillColor(Color(BUTTON_COLOR));
+                    statsButton.setOutlineColor(Color::Black);
+                } else {
+                    statsButton.setFillColor(Color(BUTTON_COLOR.r-30, BUTTON_COLOR.g-10, BUTTON_COLOR.b-10));   
+                    statsButton.setOutlineColor(Color::White);
+                }
+
                 if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                     Vector2i mousePos = Mouse::getPosition(*window);
                     if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
@@ -132,7 +159,7 @@ void Game::mainMenu(RenderWindow* window) {
         if (!firstGifFinished) {
             backgroundSprite.setTexture(gif1Textures[currentFrame]); // draw 1st gif frame
         } else {
-            backgroundSprite.setTexture(gif2Textures[currentFrame]); // draw 2nd gif frame
+            backgroundSprite.setTexture(gif2Textures[currentFrame]); // draw 2nd gif
         }
         window->draw(backgroundSprite);
 
