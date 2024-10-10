@@ -10,67 +10,67 @@ Game::Game(int num_cols, int num_rows) {
     game_matrix = new CellMatrix(num_rows, num_cols); 
 }
 
-void Game::mainMenu(sf::RenderWindow* window) {
-    sf::Font font;
+void Game::mainMenu(RenderWindow* window) {
+    Font font;
     if (!font.loadFromFile("assets/BroncoPersonalUse.ttf")) {
-        std::cout << "Error loading font" << std::endl;
+        cout << "Error loading font" << endl;
         return;  
     }
     
     // loading each frame of gif
-    sf::Texture textures[20];
+    Texture textures[20];
     for (int i = 0; i < 20; ++i) { 
-        if (!textures[i].loadFromFile("assets/frame" + std::to_string(i + 1) + ".gif")) { 
-            std::cout << "Error loading frame " << (i + 1) << std::endl;
+        if (!textures[i].loadFromFile("assets/frame" + to_string(i + 1) + ".gif")) { 
+            cout << "Error loading frame " << (i + 1) << endl;
             return;
         }
     }
 
     // Creating buttons
-    sf::RectangleShape playButton(sf::Vector2f(125, 75));
-    playButton.setFillColor(sf::Color(70, 130, 180));
+    RectangleShape playButton(Vector2f(125, 75));
+    playButton.setFillColor(Color(70, 130, 180));
     playButton.setPosition(500, 300);
     playButton.setOutlineThickness(2);
-    playButton.setOutlineColor(sf::Color::White);
+    playButton.setOutlineColor(Color::White);
 
-    sf::RectangleShape howToPlayButton(sf::Vector2f(125, 75));
-    howToPlayButton.setFillColor(sf::Color(70, 130, 180));
+    RectangleShape howToPlayButton(Vector2f(125, 75));
+    howToPlayButton.setFillColor(Color(70, 130, 180));
     howToPlayButton.setPosition(625, 425);
     howToPlayButton.setOutlineThickness(2);
-    howToPlayButton.setOutlineColor(sf::Color::White);
+    howToPlayButton.setOutlineColor(Color::White);
 
-    sf::RectangleShape statsButton(sf::Vector2f(125, 75));
-    statsButton.setFillColor(sf::Color(70, 130, 180));
+    RectangleShape statsButton(Vector2f(125, 75));
+    statsButton.setFillColor(Color(70, 130, 180));
     statsButton.setPosition(750, 550);
     statsButton.setOutlineThickness(2);
-    statsButton.setOutlineColor(sf::Color::White);
+    statsButton.setOutlineColor(Color::White);
 
     // labels
-    sf::Text playGameText, howToPlayText, statsText;
+    Text playGameText, howToPlayText, statsText;
     playGameText.setFont(font);
     playGameText.setString("Play");
     playGameText.setCharacterSize(40);
-    playGameText.setFillColor(sf::Color::Black);
+    playGameText.setFillColor(Color::Black);
     playGameText.setPosition(playButton.getPosition().x + 30, playButton.getPosition().y + 10);
 
     howToPlayText.setFont(font);
     howToPlayText.setString("Help");
     howToPlayText.setCharacterSize(40);
-    howToPlayText.setFillColor(sf::Color::Black);
+    howToPlayText.setFillColor(Color::Black);
     howToPlayText.setPosition(howToPlayButton.getPosition().x + 30, howToPlayButton.getPosition().y + 10);
 
     statsText.setFont(font);
     statsText.setString("Stats");
     statsText.setCharacterSize(40);
-    statsText.setFillColor(sf::Color::Black);
+    statsText.setFillColor(Color::Black);
     statsText.setPosition(statsButton.getPosition().x + 30, statsButton.getPosition().y + 10);
 
     // Help text
-    sf::Text howToPlayInstructions;
+    Text howToPlayInstructions;
     howToPlayInstructions.setFont(font);
     howToPlayInstructions.setString("How to Play:\n- Left click to reveal a cell.\n- Right click to flag a cell.\nPress Enter to return.");
     howToPlayInstructions.setCharacterSize(24);
-    howToPlayInstructions.setFillColor(sf::Color::White);
+    howToPlayInstructions.setFillColor(Color::White);
     howToPlayInstructions.setPosition(100, 150);
 
     // Status
@@ -80,19 +80,19 @@ void Game::mainMenu(sf::RenderWindow* window) {
 
     // Frame timing
     float frameDuration = 0.1f; 
-    sf::Clock frameClock;
+    Clock frameClock;
     int currentFrame = 0; // Index for current frame
 
     while (window->isOpen()) {
-        sf::Event event;
+        Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == Event::Closed) {
                 window->close();
             }
 
             if (inMenu && !isPlaying) {
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+                if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                    Vector2i mousePos = Mouse::getPosition(*window);
                     if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         isPlaying = true;   // Start the game
                         inMenu = false;     
@@ -100,7 +100,7 @@ void Game::mainMenu(sf::RenderWindow* window) {
                         inHowToPlay = true; // Show help page
                         inMenu = false;      
                     } else if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                        std::cout << "Stats button clicked!" << std::endl;
+                        cout << "Stats button clicked!" << endl;
                     }
                 }
             }
@@ -115,7 +115,7 @@ void Game::mainMenu(sf::RenderWindow* window) {
         window->clear(); // Clear the window
 
         // draw stuff
-        sf::Sprite backgroundSprite;
+        Sprite backgroundSprite;
         backgroundSprite.setTexture(textures[currentFrame]);
         window->draw(backgroundSprite);
 
@@ -159,12 +159,12 @@ void Game::run() {
             if (event.type == Event:: Closed){
                 game_window->close();
             } else if (event.type == Event::MouseButtonReleased && !(game_matrix->get_gameover())){  // don't take input after gameover
-                if (event.mouseButton.button == sf::Mouse::Left) {
+                if (event.mouseButton.button == Mouse::Left) {
                     
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+                    Vector2i mousePos = Mouse::getPosition(*game_window);
 
                     // ensure resizing window doesnt change coords
-                    sf::Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+                    Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
                     
                     int mouseX = worldPos.x;
                     int mouseY = worldPos.y;
@@ -177,12 +177,12 @@ void Game::run() {
 
 
                     }
-                else if (event.mouseButton.button == sf::Mouse::Right) {
+                else if (event.mouseButton.button == Mouse::Right) {
 
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+                    Vector2i mousePos = Mouse::getPosition(*game_window);
 
                     // ensure resizing window doesnt change coords
-                    sf::Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+                    Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
                     
                     int mouseX = worldPos.x;
                     int mouseY = worldPos.y;
