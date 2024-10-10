@@ -225,71 +225,66 @@ void Game::mainMenu(RenderWindow* window) {
 
 void Game::run() {
     game_window->create(VideoMode(CELL_SIZE * game_matrix->get_num_cols(),
-                                 CELL_SIZE * game_matrix->get_num_rows()), WINDOW_TITLE);
-    // setting mines randomly
+                                  CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE);
+
+   
+    RectangleShape progressBarBg(Vector2f(300, 20));  
+    progressBarBg.setFillColor(Color(150, 150, 150));    
+    progressBarBg.setPosition((game_window->getSize().x +300) / 2, CELL_SIZE * game_matrix->get_num_rows() + 15); 
+
+    RectangleShape progressBar(Vector2f(0, 20));             
+    progressBar.setFillColor(Color(50, 200, 50));                 
+    progressBar.setPosition((game_window->getSize().x + 300) / 2, CELL_SIZE * game_matrix->get_num_rows() + 15);  
+
+    RectangleShape extraBg(Vector2f(game_window->getSize().x, 50)); 
+    extraBg.setFillColor(Color(153, 0, 0)); 
+    extraBg.setPosition(0, CELL_SIZE * game_matrix->get_num_rows());
+
     game_matrix->set_gameboard();
 
     Clock reveal_clock;
     int current_mine_index = 0;
-
     // reveal all cells for testing purposes
     // game_matrix->reveal_all_cells();
+    int totalCells = game_matrix->get_num_rows() * game_matrix->get_num_cols();
 
-    // running the window
-    while (game_window->isOpen()){
-
-        Event event; // to close the window
-        while (game_window->pollEvent(event)){
-            if (event.type == Event:: Closed){
+    while (game_window->isOpen()) {
+        Event event;
+        while (game_window->pollEvent(event)) {
+            if (event.type == Event::Closed) {
                 game_window->close();
-            } else if (event.type == Event::MouseButtonReleased && !(game_matrix->get_gameover())){  // don't take input after gameover
+            } else if (event.type == Event::MouseButtonReleased && !game_matrix->get_gameover()) {
                 if (event.mouseButton.button == Mouse::Left) {
-                    
                     Vector2i mousePos = Mouse::getPosition(*game_window);
-
-                    // ensure resizing window doesnt change coords
                     Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
-                    
-                    int mouseX = worldPos.x;
-                    int mouseY = worldPos.y;
 
-                    int cell_index_x = mouseX / CELL_SIZE;
-                    int cell_index_y = mouseY / CELL_SIZE;
+                    int cell_index_x = worldPos.x / CELL_SIZE;
+                    int cell_index_y = (worldPos.y) / CELL_SIZE; 
 
-                    // y * num_cols + x
-                    game_matrix->get_matrix()[cell_index_y* game_matrix->get_num_cols() + cell_index_x]->reveal(game_matrix);
-
-
-                    }
-                else if (event.mouseButton.button == Mouse::Right) {
-
+                    game_matrix->get_matrix()[cell_index_y * game_matrix->get_num_cols() + cell_index_x]->reveal(game_matrix);
+                } else if (event.mouseButton.button == Mouse::Right) {
                     Vector2i mousePos = Mouse::getPosition(*game_window);
-
-                    // ensure resizing window doesnt change coords
                     Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
-                    
-                    int mouseX = worldPos.x;
-                    int mouseY = worldPos.y;
 
-                    int cell_index_x = mouseX / CELL_SIZE;
-                    int cell_index_y = mouseY / CELL_SIZE;
+                    int cell_index_x = worldPos.x / CELL_SIZE;
+                    int cell_index_y = (worldPos.y) / CELL_SIZE; 
 
-                    // y * num_cols + x
-                    game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->flag(game_window);
-                    
+                    game_matrix->get_matrix()[cell_index_y * game_matrix->get_num_cols() + cell_index_x]->flag(game_window);
                 }
-            } else if (event.type == Event::KeyPressed) {
-                if (event.key.code == Keyboard::Escape) {
-                    game_window->close();
-                }
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+                game_window->close();
             }
-
-
         }
 
-        game_window->clear();
+        int revealedCells = game_matrix->get_revealed_cells();  
+        float revealPercentage = static_cast<float>(revealedCells) / totalCells;
+        progressBar.setSize(Vector2f(300 * revealPercentage, 20));  
 
-        // if game is over, reveal mines with animation, if game won, show mine locations with animation
+        game_window->clear();
+        game_window->draw(extraBg);
+        game_window->draw(progressBarBg);
+        game_window->draw(progressBar);
+
         if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
             (current_mine_index < game_matrix->get_mine_locations().size())) {
             
@@ -297,9 +292,7 @@ void Game::run() {
                 int location = game_matrix->get_mine_locations()[current_mine_index];
                 Cell* mine = game_matrix->get_matrix()[location];
 
-                // animate depending on win or lose
                 if (game_matrix->get_gameover()) {
-                    // unflag and reveal mine
                     if (!mine->get_is_reveal()) {
                         if (mine->get_is_flagged()) {
                             mine->flag(game_window);
@@ -317,16 +310,11 @@ void Game::run() {
             }
         }
 
-        // display the matrix
         game_matrix->display(game_window);
-
-        // display the window
         game_window->display();
-
-        
     }
-}
 
+}
 
 // getters and setters
 // get game window
