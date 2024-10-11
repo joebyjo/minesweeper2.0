@@ -143,6 +143,10 @@ void CellMatrix::game_over() {
     is_gameover = true;
 }
 
+// get revealed cells
+int CellMatrix::get_revealed_cells() {
+    return this->revealed_cells;
+}
 // get matrix
 Cell** CellMatrix:: get_matrix() {
     return this->matrix;

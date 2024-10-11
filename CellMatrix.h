@@ -38,6 +38,8 @@ class CellMatrix{
         vector<int> get_mine_locations();
         int get_revealed_cells();
         bool get_gameover();
+        int get_revealed_cells();
+
 
         void set_matrix(Cell **matrix);
         void set_num_cols(int num_cols);
