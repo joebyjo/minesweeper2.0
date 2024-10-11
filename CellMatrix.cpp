@@ -137,14 +137,6 @@ void CellMatrix::increment_revealed() {
     this->revealed_cells++;
 }
 
-bool CellMatrix::check_game_win() {
-
-    if (revealed_cells== ((num_cols*num_rows)-num_mines)) {
-        return true;
-    }
-
-    return false;
-}
 
 // game over function
 void CellMatrix::game_over() {
@@ -174,6 +166,10 @@ int CellMatrix::get_num_mines() {
 vector<int> CellMatrix::get_mine_locations() {
     return this->mine_locations;
 }
+
+int CellMatrix::get_revealed_cells() {
+    return this->revealed_cells;
+};
 
 // set matrix manually
 void CellMatrix:: set_matrix(Cell **matrix) {

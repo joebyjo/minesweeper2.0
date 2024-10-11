@@ -28,7 +28,6 @@ class CellMatrix{
         void display_overlay(); // displays the overlaying checkerboard
         void reveal_all_cells(); // reveals all the cells (used for development)
         void increment_revealed();
-        bool check_game_win();
         void game_over();
 
         // getters and setters
@@ -37,6 +36,7 @@ class CellMatrix{
         int get_num_rows();
         int get_num_mines();
         vector<int> get_mine_locations();
+        int get_revealed_cells();
         bool get_gameover();
 
         void set_matrix(Cell **matrix);

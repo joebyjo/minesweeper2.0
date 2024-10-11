@@ -19,6 +19,7 @@ class Game{
     public:
         Game(int num_cols, int num_rows);
         void run();
+        bool check_game_win();
 
         // getters and setters
         RenderWindow* get_game_window();

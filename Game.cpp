@@ -76,7 +76,7 @@ void Game::run() {
         game_window->clear();
 
         // if game is over, reveal mines with animation, if game won, show mine locations with animation
-        if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
+        if ((game_matrix->get_gameover() || check_game_win()) && 
             (current_mine_index < game_matrix->get_mine_locations().size())) {
             
             if (reveal_clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
@@ -92,7 +92,7 @@ void Game::run() {
                         }
                         mine->reveal(game_matrix);
                     }
-                } else if (game_matrix->check_game_win()) {
+                } else if (check_game_win()) {
                     if (!mine->get_is_reveal()) {
                         mine->set_color(Color::White);
                     }
@@ -113,6 +113,14 @@ void Game::run() {
     }
 }
 
+bool Game::check_game_win() {
+
+    if (game_matrix->get_revealed_cells()== ((game_matrix->get_num_cols()*game_matrix->get_num_rows())-game_matrix->get_num_mines())) {
+        return true;
+    }
+
+    return false;
+}
 
 // getters and setters
 // get game window
