@@ -15,6 +15,7 @@ class Game{
     protected:
         RenderWindow *game_window;
         CellMatrix *game_matrix;
+        Clock game_timer;
 
     public:
         Game(int num_cols, int num_rows);

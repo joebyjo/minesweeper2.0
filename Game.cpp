@@ -249,7 +249,6 @@ void Game::run() {
 
     game_matrix->set_gameboard();
 
-    Clock reveal_clock;
     int current_mine_index = 0;
     // reveal all cells for testing purposes
     // game_matrix->reveal_all_cells();
@@ -292,10 +291,27 @@ void Game::run() {
         game_window->draw(progressBarBg);
         game_window->draw(progressBar);
 
+        // load font for timer
+        Font timerfont; 
+        if (!timerfont.loadFromFile("assets/monospace.ttf")) {
+           return;
+        }
+
+        // timer settings
+        Time elapsed = game_timer.getElapsedTime(); 
+        string timerText = "Time: " + to_string((int)(elapsed.asSeconds())) + "s";
+        Text timerDisplay(timerText, timerfont);
+        timerDisplay.setCharacterSize(20);
+        timerDisplay.setFillColor(Color::White);
+        timerDisplay.setPosition((game_window->getSize().x * 3 / 20), CELL_SIZE * game_matrix->get_num_rows() + 12.5);
+        
+        game_window->draw(timerDisplay);
+
+        // game over animation
         if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
             (current_mine_index < game_matrix->get_mine_locations().size())) {
             
-            if (reveal_clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
+            if (game_timer.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
                 int location = game_matrix->get_mine_locations()[current_mine_index];
                 Cell* mine = game_matrix->get_matrix()[location];
 
@@ -313,7 +329,7 @@ void Game::run() {
                 }
 
                 current_mine_index++;
-                reveal_clock.restart();
+                game_timer.restart();
             }
         }
 
