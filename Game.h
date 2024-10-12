@@ -23,6 +23,7 @@ class Game{
         Game(int num_cols, int num_rows);
         void run();
         void mainMenu(sf::RenderWindow* window);
+        bool play_animation();
 
         bool check_game_win();
 

@@ -311,9 +311,6 @@ void Game::run() {
 
         // draw on window
         game_window->clear();
-        game_window->draw(extraBg);
-        game_window->draw(progressBarBg);
-        game_window->draw(progressBar);
 
         // Timer settings
         Time elapsed = game_timer.getElapsedTime();
@@ -337,40 +334,61 @@ void Game::run() {
         timerDisplay.setCharacterSize(20);
         timerDisplay.setFillColor(Color::White);
         timerDisplay.setPosition((game_window->getSize().x * 3 / 25), CELL_SIZE * game_matrix->get_num_rows() + 12.5);
-        game_window->draw(timerDisplay);
+        
 
-        // game over animation
-         if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
-            (current_mine_index < game_matrix->get_mine_locations().size())) {
-            
-            if (game_timer.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
-                int location = game_matrix->get_mine_locations()[current_mine_index];
-                Cell* mine = game_matrix->get_matrix()[location];
-
-                if (game_matrix->get_gameover()) {
-                    if (!mine->get_is_reveal()) {
-                        if (mine->get_is_flagged()) {
-                            mine->flag(game_window);
-                        }
-                        mine->reveal(game_matrix);
-                    }
-                } else if (check_game_win()) {
-                    if (!mine->get_is_reveal()) {
-                        mine->set_color(Color::White);
-                    }
-                }
-
-                current_mine_index++;
-                game_timer.restart();
+        // if game end, reveal mines with animation
+        if (game_matrix->get_gameover() || check_game_win()){
+            if (play_animation()) {
+                cout << "animation complete" << endl;
             }
         }
 
+        game_window->draw(timerDisplay);
+        game_window->draw(extraBg);
+        game_window->draw(progressBarBg);
+        game_window->draw(progressBar);
         game_matrix->display(game_window);
         game_window->display();
-
-        
     }
 }
+
+
+        
+
+bool Game::play_animation() {
+    static Clock clock;
+    static int current_mine_index = 0;
+
+    if (current_mine_index == game_matrix->get_mine_locations().size()-1) {
+        current_mine_index++; // so true is only returned once
+        return true;
+
+    } else if (current_mine_index < game_matrix->get_mine_locations().size()) {
+        if (clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
+            int location = game_matrix->get_mine_locations()[current_mine_index];
+            Cell* mine = game_matrix->get_matrix()[location];
+
+            if (game_matrix->get_gameover()) {
+                if (!mine->get_is_reveal()) {
+                    if (mine->get_is_flagged()) {
+                        mine->flag(game_window);
+                    }
+                    mine->reveal(game_matrix);
+                }
+            } else if (check_game_win()) {
+                if (!mine->get_is_reveal()) {
+                    mine->set_color(Color::White);
+                }
+            }
+
+            current_mine_index++;
+            clock.restart();
+        }
+    }
+
+    return false;
+}
+
 
 bool Game::check_game_win() {
 
