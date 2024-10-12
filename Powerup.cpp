@@ -12,8 +12,16 @@ Powerup::Powerup(int x, int y): Number(x, y) {
 
 // on_revealed function a vortual void function
 void Powerup::on_revealed(CellMatrix* game_matrix) {
-    xray(game_matrix);
-    // supernumber(game_matrix);
+
+    srand(RANDOM_SEED);
+    int random = rand() % 2;
+
+    if (random == 0){
+        supernumber(game_matrix);
+    } else {
+        xray(game_matrix);
+    }
+
 }
 void Powerup::supernumber(CellMatrix* game_matrix) {
 
