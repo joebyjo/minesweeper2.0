@@ -268,19 +268,24 @@ void Game::run() {
         return;
     }
 
+    // int previousCellIdx = -1;
     while (game_window->isOpen()) {
         Event event;
         while (game_window->pollEvent(event)) {
+
+            Vector2i mousePos = Mouse::getPosition(*game_window);
+            Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+            int cell_index_x = worldPos.x / CELL_SIZE;
+            int cell_index_y = worldPos.y / CELL_SIZE; 
+            int cell_index = cell_index_y * game_matrix->get_num_cols() + cell_index_x;
+            // Cell* cell = nullptr;
+
+            // if (cell_index >= 0 && cell_index < totalCells) {
+            //     cell = game_matrix->get_matrix()[cell_index];
+            // }
             if (event.type == Event::Closed) {
                 game_window->close();
             } else if (event.type == Event::MouseButtonReleased && !game_matrix->get_gameover()) {
-                Vector2i mousePos = Mouse::getPosition(*game_window);
-                Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
-
-                int cell_index_x = worldPos.x / CELL_SIZE;
-                int cell_index_y = worldPos.y / CELL_SIZE; 
-
-                int cell_index = cell_index_y * game_matrix->get_num_cols() + cell_index_x;
 
                 // ensuring clicking progress bar doesn't cause errors
                 if (totalCells > cell_index) {
@@ -292,7 +297,7 @@ void Game::run() {
                         }
                         game_matrix->get_matrix()[cell_index]->reveal(game_matrix);
                     } else if (event.mouseButton.button == Mouse::Right) {
-			 if (!timerStarted) {
+			            if (!timerStarted) {
                             game_timer.restart();  // reset timer
                             timerStarted = true;   // update timer state
                         }
@@ -302,6 +307,27 @@ void Game::run() {
             } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                 game_window->close();
             }
+
+        //     // hover off settings
+        //     if (previousCellIdx != -1) {
+        //         Cell* previousCell = game_matrix->get_matrix()[previousCellIdx];
+        //         if (previousCell && !previousCell->get_is_reveal()) {
+        //             if ((previousCell->get_location()[0] + previousCell->get_location()[1]) % 2 == 0) {
+        //                 previousCell->set_color(CELL_COLOR_2); 
+        //             } else {
+        //                 previousCell->set_color(CELL_COLOR_1); 
+        //             }
+        //         }
+        //     }
+
+        //     // hover for cell
+        //     if (cell && !cell->get_is_reveal()) { // check if cell is unrevealed
+        //         Color hoverColor = Color(CELL_COLOR_1.r + 40, CELL_COLOR_1.g + 40, CELL_COLOR_1.b + 40);
+        //         cell->set_color(hoverColor);
+        //     }
+
+        //     // update last cell
+        //     previousCellIdx = cell_index;
         }
 
         // progress bar formula
