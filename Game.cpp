@@ -8,6 +8,9 @@ Game::Game(int num_cols, int num_rows) {
     
     // creating the matrix of cells
     game_matrix = new CellMatrix(num_rows, num_cols); 
+
+    // intialize game start status
+    hasStarted = false;
 }
 
 void Game::mainMenu(RenderWindow* window) {
@@ -233,14 +236,14 @@ void Game::run() {
                                   CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE);
 
     // shape for progress bar (hollow)
-    RectangleShape progressBarBg(Vector2f(game_window->getSize().x/4, 20)); 
+    RectangleShape progressBarBg(Vector2f(game_window->getSize().x / 4, 20)); 
     progressBarBg.setFillColor(Color(150, 150, 150));    
-    progressBarBg.setPosition((game_window->getSize().x)*3/5, CELL_SIZE * game_matrix->get_num_rows() + 15); 
+    progressBarBg.setPosition((game_window->getSize().x) * 3 / 5, CELL_SIZE * game_matrix->get_num_rows() + 15); 
 
     // shape for progress bar (filled)
     RectangleShape progressBar(Vector2f(0, 20));             
     progressBar.setFillColor(Color(50, 200, 50));                 
-    progressBar.setPosition((game_window->getSize().x)*3/5, CELL_SIZE * game_matrix->get_num_rows() + 15);  
+    progressBar.setPosition((game_window->getSize().x) * 3 / 5, CELL_SIZE * game_matrix->get_num_rows() + 15);  
 
     // shape for space behind progress bar
     RectangleShape extraBg(Vector2f(game_window->getSize().x, 50)); 
@@ -254,6 +257,17 @@ void Game::run() {
     // game_matrix->reveal_all_cells();
     int totalCells = game_matrix->get_num_rows() * game_matrix->get_num_cols();
 
+    // variable to store time when game ends
+    float finalTime = 0.0;
+    bool timerStopped = false;  // time stopper
+    bool timerStarted = false;  // time starter
+
+    // load font for timer
+    Font timerfont; 
+    if (!timerfont.loadFromFile("assets/monospace.ttf")) {
+        return;
+    }
+
     while (game_window->isOpen()) {
         Event event;
         while (game_window->pollEvent(event)) {
@@ -264,51 +278,69 @@ void Game::run() {
                 Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
 
                 int cell_index_x = worldPos.x / CELL_SIZE;
-                int cell_index_y = (worldPos.y) / CELL_SIZE; 
+                int cell_index_y = worldPos.y / CELL_SIZE; 
 
                 int cell_index = cell_index_y * game_matrix->get_num_cols() + cell_index_x;
 
                 // ensuring clicking progress bar doesn't cause errors
                 if (totalCells > cell_index) {
                     if (event.mouseButton.button == Mouse::Left) {
+                        // start the timer on first click
+                        if (!timerStarted) {
+                            game_timer.restart();  // reset timer
+                            timerStarted = true;   // update timer state
+                        }
                         game_matrix->get_matrix()[cell_index]->reveal(game_matrix);
                     } else if (event.mouseButton.button == Mouse::Right) {
+			 if (!timerStarted) {
+                            game_timer.restart();  // reset timer
+                            timerStarted = true;   // update timer state
+                        }
                         game_matrix->get_matrix()[cell_index]->flag(game_window);
                     }
                 }
-
             } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                 game_window->close();
             }
         }
 
+        // progress bar formula
         int revealedCells = game_matrix->get_revealed_cells();  
         float revealPercentage = (float)revealedCells / (totalCells - game_matrix->get_num_mines());
-        progressBar.setSize(Vector2f(game_window->getSize().x/4 * revealPercentage, 20));  
+        progressBar.setSize(Vector2f(game_window->getSize().x / 4 * revealPercentage, 20));  
 
+        // draw on window
         game_window->clear();
         game_window->draw(extraBg);
         game_window->draw(progressBarBg);
         game_window->draw(progressBar);
 
-        // load font for timer
-        Font timerfont; 
-        if (!timerfont.loadFromFile("assets/monospace.ttf")) {
-           return;
+        // Timer settings
+        Time elapsed = game_timer.getElapsedTime();
+        string timerText;
+
+        if (!timerStarted) {
+            timerText = "Time: 0s"; // display 0 if not started
+        } else if (!game_matrix->get_gameover()) {
+            finalTime = elapsed.asSeconds();  // update time till game running
+            timerText = "Time: " + to_string((int)(finalTime)) + "s";
+        } else if (!timerStopped) {
+            timerStopped = true; // stop timer once game over
         }
 
-        // timer settings
-        Time elapsed = game_timer.getElapsedTime(); 
-        string timerText = "Time: " + to_string((int)(elapsed.asSeconds())) + "s";
+        if (timerStopped) {
+            timerText = "Time: " + to_string((int)(finalTime)) + "s"; // display final time
+        }
+
+        // displaying timer
         Text timerDisplay(timerText, timerfont);
         timerDisplay.setCharacterSize(20);
         timerDisplay.setFillColor(Color::White);
-        timerDisplay.setPosition((game_window->getSize().x * 3 / 20), CELL_SIZE * game_matrix->get_num_rows() + 12.5);
-        
+        timerDisplay.setPosition((game_window->getSize().x * 3 / 25), CELL_SIZE * game_matrix->get_num_rows() + 12.5);
         game_window->draw(timerDisplay);
 
         // game over animation
-        if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
+         if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
             (current_mine_index < game_matrix->get_mine_locations().size())) {
             
             if (game_timer.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
@@ -336,7 +368,6 @@ void Game::run() {
         game_matrix->display(game_window);
         game_window->display();
     }
-
 }
 
 // getters and setters
@@ -366,3 +397,4 @@ Game:: ~Game() {
     delete game_window;
     delete game_matrix;
 }
+ 
