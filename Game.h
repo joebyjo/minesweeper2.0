@@ -1,3 +1,4 @@
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -15,6 +16,8 @@ class Game{
     protected:
         RenderWindow *game_window;
         CellMatrix *game_matrix;
+        Clock game_timer;
+        bool hasStarted;
 
     public:
         Game(int num_cols, int num_rows);
