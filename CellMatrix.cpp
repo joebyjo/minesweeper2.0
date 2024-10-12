@@ -205,6 +205,63 @@ void CellMatrix::game_over() {
     is_gameover = true;
 }
 
+void CellMatrix::first_click(int cell_index_x, int cell_index_y) {
+
+    // storing the index of cell in it
+    int mine_index = cell_index_y * num_cols + cell_index_x;
+
+    // checking if the clicked cell is a bomb or else return
+    if (matrix[mine_index]->get_type() != "mine"){
+        return;
+    }
+
+    int mine_count = 0; // keeping track of mine
+
+    for (int row  = cell_index_y - 1; (row < cell_index_y + 2) && (row < num_rows); row++){
+        for (int col = cell_index_x - 1; (col < cell_index_x + 2) && (col < num_cols); col++){
+            
+            // checking the cell doesn't got out of game board 0,0
+            if (row < 0 || col < 0 || (row == cell_index_y && col == cell_index_x)){
+                continue;
+            }
+
+            // storing the index of cell in it
+            int temp = row * num_cols + col;
+
+            if (matrix[temp]->get_type() == "number"){
+
+                static_cast<Number*>(matrix[temp])->decrement_mine_count();
+            
+                // checking if it becomes zero
+                if (static_cast<Number*>(matrix[temp])->get_neighboring_mine_count() == 0){
+                    // set the cell to empty
+                    matrix[temp] = new Empty(col, row);
+                }
+                
+            }
+            else if(matrix[temp]->get_type() == "mine"){
+                mine_count++;
+            }
+
+
+        }
+    }
+
+    // Removing the mine and setting a cell accordingly
+    if (mine_count > 0){
+        matrix[mine_index] = new Number(cell_index_x, cell_index_y);
+        static_cast<Number*>(matrix[mine_index])->set_neighboring_mine_count(mine_count);
+    }
+    else if (mine_count == 0){
+        matrix[mine_index] = new Empty(cell_index_x, cell_index_y);
+    }
+
+    // removing mine from the mine location vector
+    this->num_mines--;
+    mine_locations.erase(std::remove(mine_locations.begin(), mine_locations.end(), mine_index), mine_locations.end());
+
+}
+
 // get matrix
 Cell** CellMatrix:: get_matrix() {
     return this->matrix;

@@ -37,6 +37,7 @@ class CellMatrix{
         void increment_revealed();
         bool check_game_win();
         void game_over();
+        void first_click(int cell_index_x, int cell_index_y); // changing the gameboard based on first click
 
         // getters and setters
         Cell** get_matrix();

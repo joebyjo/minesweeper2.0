@@ -4,7 +4,9 @@
 Game::Game(int num_cols, int num_rows) {
     
     // creating the window
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); 
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE);
+    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // game_window->setPosition(sf::Vector2i((desktop.width - 1000)/8, (desktop.height - 750)/8));
     
     // creating the matrix of cells
     game_matrix = new CellMatrix(num_rows, num_cols, game_window); 
@@ -14,6 +16,7 @@ void Game::run() {
 
     // setting mines randomly
     game_matrix->set_gameboard();
+    set_is_first_click(true);
 
     Clock reveal_clock;
     int current_mine_index = 0;
@@ -41,6 +44,8 @@ void Game::run() {
 
                     int cell_index_x = mouseX / CELL_SIZE;
                     int cell_index_y = mouseY / CELL_SIZE;
+
+                    if(is_first_click){check_first_click(cell_index_x, cell_index_y);}
 
                     // y * num_cols + x
                     game_matrix->get_matrix()[cell_index_y* game_matrix->get_num_cols() + cell_index_x]->reveal(game_matrix);
@@ -113,6 +118,12 @@ void Game::run() {
     }
 }
 
+void Game::check_first_click(int cell_index_x, int cell_index_y) {
+    set_is_first_click(false); // setting the first clisck as false
+
+    game_matrix->first_click(cell_index_x, cell_index_y);
+
+}
 
 // getters and setters
 // get game window
@@ -125,6 +136,8 @@ CellMatrix* Game:: get_game_matrix() {
     return this->game_matrix;
 }
 
+bool Game::get_is_first_click() { return is_first_click; }
+
 // set game window manually
 void Game:: set_game_window(RenderWindow* game_window) {
     this->game_window = game_window;
@@ -133,8 +146,8 @@ void Game:: set_game_window(RenderWindow* game_window) {
 // set game matrix manually
 void Game:: set_game_matrix(CellMatrix* game_matrix) {
     this->game_matrix = game_matrix;
-};
-
+}
+void Game::set_is_first_click(bool is_first_click) { this->is_first_click = is_first_click; };
 
 // destroy all attached objects 
 Game:: ~Game() {

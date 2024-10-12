@@ -15,17 +15,21 @@ class Game{
     protected:
         RenderWindow *game_window;
         CellMatrix *game_matrix;
+        bool is_first_click;
 
     public:
         Game(int num_cols, int num_rows);
         void run();
+        void check_first_click(int cell_index_x, int cell_index_y);
 
         // getters and setters
         RenderWindow* get_game_window();
         CellMatrix* get_game_matrix();
+        bool get_is_first_click();
         
         void set_game_window(RenderWindow* game_window);
         void set_game_matrix(CellMatrix* game_matrix);
+        void set_is_first_click(bool is_first_click);
 
         ~Game();
 
