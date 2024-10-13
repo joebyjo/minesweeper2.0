@@ -1,5 +1,8 @@
 #include "Constants.h"
 #include "Game.h"
+#include <sstream>
+#include <vector>
+#include <string>
 
 Game::Game(int num_cols, int num_rows) {
     
@@ -175,6 +178,101 @@ void Game::run() {
     }
 }
 
+// // function to display highscores
+// void Game::displayStats(RenderWindow* window) {
+//     // loading font
+//     Font font;
+//     if (!font.loadFromFile("assets/monospace.ttf")) {
+//         return;
+//     }
+
+//     // importing csv
+//     ifstream file("game_highscores.csv");
+//     if (!file.is_open()) {
+//         return;
+//     }
+
+//     string line;
+//     vector<string> names;
+//     vector<string> times;
+//     vector<string> difficulties;
+//     vector<string> scores;
+
+//     // reading csv 
+//     while (getline(file, line)) {
+//         istringstream ss(line);
+//         string name, time, difficulty, score;
+
+//         getline(ss, name, ',');
+//         getline(ss, time, ',');
+//         getline(ss, difficulty, ',');
+//         getline(ss, score, ',');
+
+//         names.push_back(name);
+//         times.push_back(time);
+//         difficulties.push_back(difficulty);
+//         scores.push_back(score);
+//     }
+
+//     file.close(); 
+
+//     // variables to store max lengths
+//     int maxNameLength = 0;
+//     int maxTimeLength = 0;
+//     int maxDifficultyLength = 0;
+//     int maxScoreLength = 0;
+
+//     // finding max lengths
+//     for (int i = 0; i < names.size(); ++i) {
+//         if (names[i].length() > maxNameLength) {
+//             maxNameLength = names[i].length();
+//         } 
+//         if (times[i].length() > maxTimeLength) {
+//             maxTimeLength = times[i].length();
+//         }
+//         if (difficulties[i].length() > maxDifficultyLength) {
+//             maxDifficultyLength = difficulties[i].length();
+//         }
+//         if (scores[i].length() > maxScoreLength) {
+//             maxScoreLength = scores[i].length();
+//         }
+//     }
+
+//     // adding extra spaces to align everything
+//     vector<Text> texts; 
+//     for (int i = 0; i < names.size(); ++i) {
+//         string displayString = 
+//             names[i] + string(maxNameLength - names[i].length() + 2, ' ') +
+//             times[i] + string(maxTimeLength - times[i].length() + 2, ' ') +
+//             difficulties[i] + string(maxDifficultyLength - difficulties[i].length() + 2, ' ') +
+//             scores[i];
+
+//         // text settings for current row
+//         Text text(displayString, font);
+//         text.setCharacterSize(20);
+//         text.setFillColor(Color::White);
+//         text.setPosition(100, 100 + i * 30); 
+
+//         texts.push_back(text); 
+//     }
+
+//     while (window->isOpen()) {
+//         Event event;
+//         window->clear(); 
+
+//         // display text
+//         for (int i = 0; i < texts.size(); ++i) {
+//             window->draw(texts[i]);
+//         }
+//         while (window->pollEvent(event)) {
+//             if (event.type == Event::Closed) {
+//                 window->close();
+//             }
+//         }
+//         window->display();
+//     }
+// }
+
 void Game::mainMenu(RenderWindow* window) {
     // main menu window (fixed size)
     game_window->create(VideoMode(1000, 750), "Main Menu");
@@ -322,6 +420,7 @@ void Game::mainMenu(RenderWindow* window) {
                         inHelp = true; // Show help page
                         inMenu = false;
                     } else if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        // displayStats(window);
                     }
                 }
             }
@@ -396,7 +495,7 @@ void Game::append_highscore(string username,int score,int time_taken,string diff
     // open file and append game stats to csv file
     ofstream highscores_file;
     highscores_file.open(USERDATA_FILE, ios::app);
-    highscores_file << username << "," << score << "," << time_taken << "," << difficulty << std::endl;
+    highscores_file << username << "," << score << "," << time_taken << "," << difficulty << endl;
     highscores_file.close();
 }
 
@@ -458,7 +557,6 @@ bool Game::check_game_win() {
 
     return false;
 }
-
 
 // getters and setters
 // get game window
