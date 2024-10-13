@@ -37,14 +37,18 @@ Number::Number(int x, int y): Cell(x, y) {
 // increment mine_count
 void Number:: increment_mine_count() {
     this->neighboring_mine_count +=1;
-    number_texture.loadFromFile(ASSETS_PATH+"num"+to_string(neighboring_mine_count)+".png");
-    number_cell->setTexture(number_texture);
+}
+
+void Number::decrement_mine_count() {
+    this->neighboring_mine_count -=1;
 }
 
 // override the draw function to draw the cell and the sprite
 void Number::draw(RenderWindow* game_window) {
     Cell::draw(game_window);
     if (is_reveal) {
+        number_texture.loadFromFile(ASSETS_PATH+"num"+to_string(neighboring_mine_count)+".png");
+        number_cell->setTexture(number_texture);
         game_window->draw(*number_cell);
     }
 }

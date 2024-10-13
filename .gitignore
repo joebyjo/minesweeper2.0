@@ -34,3 +34,6 @@
 # For mac
 .vscode/
 **/.DS_Store
+
+# Project
+game_highscores.csv

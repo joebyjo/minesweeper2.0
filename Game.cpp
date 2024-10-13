@@ -4,10 +4,12 @@
 Game::Game(int num_cols, int num_rows) {
     
     // creating the window
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); 
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE);
+    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // game_window->setPosition(sf::Vector2i((desktop.width - 1000)/8, (desktop.height - 750)/8));
     
     // creating the matrix of cells
-    game_matrix = new CellMatrix(num_rows, num_cols); 
+    game_matrix = new CellMatrix(num_rows, num_cols, game_window); 
 
     // intialize game start status
     hasStarted = false;
@@ -34,6 +36,7 @@ void Game::run() {
     extraBg.setPosition(0, CELL_SIZE * game_matrix->get_num_rows());
 
     game_matrix->set_gameboard();
+    set_is_first_click(true);
 
     int current_mine_index = 0;
     // reveal all cells for testing purposes
@@ -41,9 +44,9 @@ void Game::run() {
     int totalCells = game_matrix->get_num_rows() * game_matrix->get_num_cols();
 
     // variable to store time when game ends
-    float finalTime = 0.0;
-    bool timerStopped = false;  // time stopper
-    bool timerStarted = false;  // time starter
+    int final_time = 0.0;
+    bool timer_stopped = false;  // time stopper
+    bool timer_started = false;  // time starter
 
     // load font for timer
     Font timerfont; 
@@ -74,15 +77,20 @@ void Game::run() {
                 if (totalCells > cell_index) {
                     if (event.mouseButton.button == Mouse::Left) {
                         // start the timer on first click
-                        if (!timerStarted) {
+                        if (!timer_started) {
                             game_timer.restart();  // reset timer
-                            timerStarted = true;   // update timer state
+                            timer_started = true;   // update timer state
                         }
+
+                        if (is_first_click){
+                            check_first_click(cell_index_x, cell_index_y);
+                        }
+                        
                         game_matrix->get_matrix()[cell_index]->reveal(game_matrix);
                     } else if (event.mouseButton.button == Mouse::Right) {
-			            if (!timerStarted) {
+			            if (!timer_started) {
                             game_timer.restart();  // reset timer
-                            timerStarted = true;   // update timer state
+                            timer_started = true;   // update timer state
                         }
                         game_matrix->get_matrix()[cell_index]->flag(game_window);
                     }
@@ -120,25 +128,22 @@ void Game::run() {
 
         // draw on window
         game_window->clear();
-        game_window->draw(extraBg);
-        game_window->draw(progressBarBg);
-        game_window->draw(progressBar);
 
         // Timer settings
-        Time elapsed = game_timer.getElapsedTime();
+        int elapsed = (int)(game_timer.getElapsedTime().asSeconds());
         string timerText;
 
-        if (!timerStarted) {
+        if (!timer_started) {
             timerText = "Time: 0s"; // display 0 if not started
-        } else if (!game_matrix->get_gameover()) {
-            finalTime = elapsed.asSeconds();  // update time till game running
-            timerText = "Time: " + to_string((int)(finalTime)) + "s";
-        } else if (!timerStopped) {
-            timerStopped = true; // stop timer once game over
+        } else if (!game_matrix->get_gameover() && !check_game_win()) {
+            final_time = elapsed;  // update time till game running
+            timerText = "Time: " + to_string(final_time) + "s";
+        } else if (game_matrix->get_gameover() || check_game_win()) {
+            timer_stopped = true; // stop timer once game over
         }
 
-        if (timerStopped) {
-            timerText = "Time: " + to_string((int)(finalTime)) + "s"; // display final time
+        if (timer_stopped) {
+            timerText = "Time: " + to_string(final_time) + "s"; // display final time
         }
 
         // displaying timer
@@ -146,34 +151,25 @@ void Game::run() {
         timerDisplay.setCharacterSize(20);
         timerDisplay.setFillColor(Color::White);
         timerDisplay.setPosition((game_window->getSize().x * 3 / 25), CELL_SIZE * game_matrix->get_num_rows() + 12.5);
-        game_window->draw(timerDisplay);
+        
 
-        // game over animation
-         if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
-            (current_mine_index < game_matrix->get_mine_locations().size())) {
-            
-            if (game_timer.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
-                int location = game_matrix->get_mine_locations()[current_mine_index];
-                Cell* mine = game_matrix->get_matrix()[location];
+        // if game end, reveal mines with animation
+        if (game_matrix->get_gameover()){
+            if (play_animation()) { 
+                // TODO
+            }
 
-                if (game_matrix->get_gameover()) {
-                    if (!mine->get_is_reveal()) {
-                        if (mine->get_is_flagged()) {
-                            mine->flag(game_window);
-                        }
-                        mine->reveal(game_matrix);
-                    }
-                } else if (game_matrix->check_game_win()) {
-                    if (!mine->get_is_reveal()) {
-                        mine->set_color(Color::White);
-                    }
-                }
-
-                current_mine_index++;
-                game_timer.restart();
+        } if (check_game_win()){
+            if (play_animation()) {
+                int score = (game_matrix->get_num_mines() * 1000)/ final_time;
+                append_highscore("joe",score,final_time,"easy");
             }
         }
 
+        game_window->draw(extraBg);
+        game_window->draw(timerDisplay);
+        game_window->draw(progressBarBg);
+        game_window->draw(progressBar);
         game_matrix->display(game_window);
         game_window->display();
     }
@@ -396,6 +392,73 @@ void Game::mainMenu(RenderWindow* window) {
     }
 }
 
+void Game::append_highscore(string username,int score,int time_taken,string difficulty) {
+    // open file and append game stats to csv file
+    ofstream highscores_file;
+    highscores_file.open(USERDATA_FILE, ios::app);
+    highscores_file << username << "," << score << "," << time_taken << "," << difficulty << std::endl;
+    highscores_file.close();
+}
+
+void Game::check_first_click(int cell_index_x, int cell_index_y) {
+    set_is_first_click(false); // setting the first clisck as false
+
+    game_matrix->first_click(cell_index_x, cell_index_y);
+
+}
+        
+
+bool Game::play_animation() {
+    static Clock clock;
+    static int current_mine_index = 0;
+    static bool animation_done = false;
+
+    if (animation_done) {
+        return false; // if done, then dont continue
+    }
+
+    if (current_mine_index < game_matrix->get_mine_locations().size()) {
+        if (clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
+            int location = game_matrix->get_mine_locations()[current_mine_index];
+            Cell* mine = game_matrix->get_matrix()[location];
+
+            if (game_matrix->get_gameover()) {
+                if (!mine->get_is_reveal()) {
+                    if (mine->get_is_flagged()) {
+                        mine->flag(game_window);
+                    }
+                    mine->reveal(game_matrix);
+                }
+            } else if (check_game_win()) {
+                if (!mine->get_is_reveal()) {
+                    mine->set_color(Color::White);
+                }
+            }
+
+            current_mine_index++;
+            clock.restart();
+        }
+    }
+
+    // check if all mines revealed
+    if (current_mine_index >= game_matrix->get_mine_locations().size()) {
+        animation_done = true;
+        return true;
+    }
+
+    return false;
+}
+
+
+bool Game::check_game_win() {
+
+    if (game_matrix->get_revealed_cells()== ((game_matrix->get_num_cols()*game_matrix->get_num_rows())-game_matrix->get_num_mines())) {
+        return true;
+    }
+
+    return false;
+}
+
 
 // getters and setters
 // get game window
@@ -408,6 +471,8 @@ CellMatrix* Game:: get_game_matrix() {
     return this->game_matrix;
 }
 
+bool Game::get_is_first_click() { return is_first_click; }
+
 // set game window manually
 void Game:: set_game_window(RenderWindow* game_window) {
     this->game_window = game_window;
@@ -416,8 +481,8 @@ void Game:: set_game_window(RenderWindow* game_window) {
 // set game matrix manually
 void Game:: set_game_matrix(CellMatrix* game_matrix) {
     this->game_matrix = game_matrix;
-};
-
+}
+void Game::set_is_first_click(bool is_first_click) { this->is_first_click = is_first_click; };
 
 // destroy all attached objects 
 Game:: ~Game() {
