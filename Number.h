@@ -22,6 +22,7 @@ class Number: public Cell{
         Number(int x, int y); // constructor
         
         void increment_mine_count();
+        void decrement_mine_count();
         void draw(RenderWindow* game_window);
         void on_revealed(CellMatrix *game_matrix); // owriting function
 

@@ -62,3 +62,7 @@ void Mine::delete_mine(CellMatrix* game_matrix) {
 
     // Testing:  cout << game_matrix->get_num_mines() << endl; 
 }
+
+void Mine::peek(RenderWindow* game_window) {
+        game_window->draw(mine_cell);
+}

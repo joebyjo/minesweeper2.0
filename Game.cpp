@@ -4,10 +4,12 @@
 Game::Game(int num_cols, int num_rows) {
     
     // creating the window
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE); 
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE);
+    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // game_window->setPosition(sf::Vector2i((desktop.width - 1000)/8, (desktop.height - 750)/8));
     
     // creating the matrix of cells
-    game_matrix = new CellMatrix(num_rows, num_cols); 
+    game_matrix = new CellMatrix(num_rows, num_cols, game_window); 
 
     // intialize game start status
     hasStarted = false;
@@ -34,6 +36,7 @@ void Game::run() {
     extraBg.setPosition(0, CELL_SIZE * game_matrix->get_num_rows());
 
     game_matrix->set_gameboard();
+    set_is_first_click(true);
 
     int current_mine_index = 0;
     // reveal all cells for testing purposes
@@ -51,19 +54,24 @@ void Game::run() {
         return;
     }
 
+    // int previousCellIdx = -1;
     while (game_window->isOpen()) {
         Event event;
         while (game_window->pollEvent(event)) {
+
+            Vector2i mousePos = Mouse::getPosition(*game_window);
+            Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+            int cell_index_x = worldPos.x / CELL_SIZE;
+            int cell_index_y = worldPos.y / CELL_SIZE; 
+            int cell_index = cell_index_y * game_matrix->get_num_cols() + cell_index_x;
+            // Cell* cell = nullptr;
+
+            // if (cell_index >= 0 && cell_index < totalCells) {
+            //     cell = game_matrix->get_matrix()[cell_index];
+            // }
             if (event.type == Event::Closed) {
                 game_window->close();
             } else if (event.type == Event::MouseButtonReleased && !game_matrix->get_gameover()) {
-                Vector2i mousePos = Mouse::getPosition(*game_window);
-                Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
-
-                int cell_index_x = worldPos.x / CELL_SIZE;
-                int cell_index_y = worldPos.y / CELL_SIZE; 
-
-                int cell_index = cell_index_y * game_matrix->get_num_cols() + cell_index_x;
 
                 // ensuring clicking progress bar doesn't cause errors
                 if (totalCells > cell_index) {
@@ -73,6 +81,11 @@ void Game::run() {
                             game_timer.restart();  // reset timer
                             timer_started = true;   // update timer state
                         }
+
+                        if (is_first_click){
+                            check_first_click(cell_index_x, cell_index_y);
+                        }
+                        
                         game_matrix->get_matrix()[cell_index]->reveal(game_matrix);
                     } else if (event.mouseButton.button == Mouse::Right) {
 			            if (!timer_started) {
@@ -365,6 +378,13 @@ void Game::append_highscore(string username,int score,int time_taken,string diff
     highscores_file << username << "," << score << "," << time_taken << "," << difficulty << std::endl;
     highscores_file.close();
 }
+
+void Game::check_first_click(int cell_index_x, int cell_index_y) {
+    set_is_first_click(false); // setting the first clisck as false
+
+    game_matrix->first_click(cell_index_x, cell_index_y);
+
+}
         
 
 bool Game::play_animation() {
@@ -430,6 +450,8 @@ CellMatrix* Game:: get_game_matrix() {
     return this->game_matrix;
 }
 
+bool Game::get_is_first_click() { return is_first_click; }
+
 // set game window manually
 void Game:: set_game_window(RenderWindow* game_window) {
     this->game_window = game_window;
@@ -438,8 +460,8 @@ void Game:: set_game_window(RenderWindow* game_window) {
 // set game matrix manually
 void Game:: set_game_matrix(CellMatrix* game_matrix) {
     this->game_matrix = game_matrix;
-};
-
+}
+void Game::set_is_first_click(bool is_first_click) { this->is_first_click = is_first_click; };
 
 // destroy all attached objects 
 Game:: ~Game() {

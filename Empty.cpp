@@ -28,7 +28,7 @@ void Empty::on_revealed(CellMatrix* game_matrix) {
              // storing the index of cell in it
             index_temp = row * game_matrix->get_num_cols() + col;
 
-            if ((game_matrix->get_matrix()[index_temp])->get_type() != "mine"){
+            if ((game_matrix->get_matrix()[index_temp])->get_type() != "mine" && (game_matrix->get_matrix()[index_temp])->get_type() != "powerup"){
                 game_matrix->get_matrix()[index_temp]->reveal(game_matrix);
             }
             

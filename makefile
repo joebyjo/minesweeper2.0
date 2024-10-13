@@ -3,7 +3,7 @@
 TARGET = game
 
 # source files
-SOURCES = main.cpp Game.cpp Cell.cpp CellMatrix.cpp Empty.cpp Mine.cpp Number.cpp
+SOURCES = main.cpp Game.cpp Cell.cpp CellMatrix.cpp Empty.cpp Mine.cpp Number.cpp Powerup.cpp
 
 # user data file
 USERDATA_FILE = game_highscores.csv
