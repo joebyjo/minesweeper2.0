@@ -12,8 +12,8 @@ using namespace sf;
 const int CELL_SIZE = 50;
 
 // dimension of game board
-const int NUM_OF_ROWS = 4;
-const int NUM_OF_COLS = 4;
+const int NUM_OF_ROWS = 15;
+const int NUM_OF_COLS = 20;
 
 // number of mines
 const float PERCENTAGE_MINES = 0.1;
