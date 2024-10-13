@@ -26,7 +26,7 @@ Mine::Mine(int x, int y): Cell(x, y) {
 void Mine::on_revealed(CellMatrix* game_matrix) {
 
     // deleting the mine from the game
-    this->delete_mine(game_matrix);
+    // this->delete_mine(game_matrix);
      
     // calling the game over function
     game_matrix->game_over();

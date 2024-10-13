@@ -6,6 +6,7 @@
 #include "CellMatrix.h"
 #include "Cell.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 
 using namespace sf;
@@ -24,7 +25,7 @@ class Game{
         void run();
         void mainMenu(sf::RenderWindow* window);
         bool play_animation();
-
+        void append_highscore(string username,int score,int time_taken,string difficulty);
         bool check_game_win();
 
         // getters and setters

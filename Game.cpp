@@ -258,9 +258,9 @@ void Game::run() {
     int totalCells = game_matrix->get_num_rows() * game_matrix->get_num_cols();
 
     // variable to store time when game ends
-    float finalTime = 0.0;
-    bool timerStopped = false;  // time stopper
-    bool timerStarted = false;  // time starter
+    int final_time = 0.0;
+    bool timer_stopped = false;  // time stopper
+    bool timer_started = false;  // time starter
 
     // load font for timer
     Font timerfont; 
@@ -286,15 +286,15 @@ void Game::run() {
                 if (totalCells > cell_index) {
                     if (event.mouseButton.button == Mouse::Left) {
                         // start the timer on first click
-                        if (!timerStarted) {
+                        if (!timer_started) {
                             game_timer.restart();  // reset timer
-                            timerStarted = true;   // update timer state
+                            timer_started = true;   // update timer state
                         }
                         game_matrix->get_matrix()[cell_index]->reveal(game_matrix);
                     } else if (event.mouseButton.button == Mouse::Right) {
-			 if (!timerStarted) {
+			            if (!timer_started) {
                             game_timer.restart();  // reset timer
-                            timerStarted = true;   // update timer state
+                            timer_started = true;   // update timer state
                         }
                         game_matrix->get_matrix()[cell_index]->flag(game_window);
                     }
@@ -313,20 +313,20 @@ void Game::run() {
         game_window->clear();
 
         // Timer settings
-        Time elapsed = game_timer.getElapsedTime();
+        int elapsed = (int)(game_timer.getElapsedTime().asSeconds());
         string timerText;
 
-        if (!timerStarted) {
+        if (!timer_started) {
             timerText = "Time: 0s"; // display 0 if not started
-        } else if (!game_matrix->get_gameover()) {
-            finalTime = elapsed.asSeconds();  // update time till game running
-            timerText = "Time: " + to_string((int)(finalTime)) + "s";
-        } else if (!timerStopped) {
-            timerStopped = true; // stop timer once game over
+        } else if (!game_matrix->get_gameover() && !check_game_win()) {
+            final_time = elapsed;  // update time till game running
+            timerText = "Time: " + to_string(final_time) + "s";
+        } else if (game_matrix->get_gameover() || check_game_win()) {
+            timer_stopped = true; // stop timer once game over
         }
 
-        if (timerStopped) {
-            timerText = "Time: " + to_string((int)(finalTime)) + "s"; // display final time
+        if (timer_stopped) {
+            timerText = "Time: " + to_string(final_time) + "s"; // display final time
         }
 
         // displaying timer
@@ -337,14 +337,20 @@ void Game::run() {
         
 
         // if game end, reveal mines with animation
-        if (game_matrix->get_gameover() || check_game_win()){
+        if (game_matrix->get_gameover()){
+            if (play_animation()) { 
+                // TODO
+            }
+
+        } if (check_game_win()){
             if (play_animation()) {
-                cout << "animation complete" << endl;
+                int score = (game_matrix->get_num_mines() * 1000)/ final_time;
+                append_highscore("joe",score,final_time,"easy");
             }
         }
 
-        game_window->draw(timerDisplay);
         game_window->draw(extraBg);
+        game_window->draw(timerDisplay);
         game_window->draw(progressBarBg);
         game_window->draw(progressBar);
         game_matrix->display(game_window);
@@ -352,18 +358,20 @@ void Game::run() {
     }
 }
 
-
+void Game::append_highscore(string username,int score,int time_taken,string difficulty) {
+    // open file and append game stats to csv file
+    ofstream highscores_file;
+    highscores_file.open(USERDATA_FILE, ios::app);
+    highscores_file << username << "," << score << "," << time_taken << "," << difficulty << std::endl;
+    highscores_file.close();
+}
         
 
 bool Game::play_animation() {
     static Clock clock;
     static int current_mine_index = 0;
 
-    if (current_mine_index == game_matrix->get_mine_locations().size()-1) {
-        current_mine_index++; // so true is only returned once
-        return true;
-
-    } else if (current_mine_index < game_matrix->get_mine_locations().size()) {
+    if (current_mine_index < game_matrix->get_mine_locations().size()) {
         if (clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
             int location = game_matrix->get_mine_locations()[current_mine_index];
             Cell* mine = game_matrix->get_matrix()[location];
@@ -384,6 +392,9 @@ bool Game::play_animation() {
             current_mine_index++;
             clock.restart();
         }
+    } if (current_mine_index == game_matrix->get_mine_locations().size()-1) {
+        current_mine_index++; // so true is only returned once
+        return true;
     }
 
     return false;
