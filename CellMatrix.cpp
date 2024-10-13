@@ -262,6 +262,10 @@ void CellMatrix::first_click(int cell_index_x, int cell_index_y) {
 
 }
 
+// get revealed cells
+int CellMatrix::get_revealed_cells() {
+    return this->revealed_cells;
+}
 // get matrix
 Cell** CellMatrix:: get_matrix() {
     return this->matrix;

@@ -1,11 +1,9 @@
 #include "Game.h"
 #include "Constants.h"
 
-int main()
-{
-
+int main() {
     Game minesweeper(NUM_OF_COLS, NUM_OF_ROWS);
-    minesweeper.run();
+    minesweeper.mainMenu(minesweeper.get_game_window());  // Pass the game window to mainMenu
 
     // Game minesweeper3(5, 7);
     // minesweeper3.run();

@@ -10,87 +10,378 @@ Game::Game(int num_cols, int num_rows) {
     
     // creating the matrix of cells
     game_matrix = new CellMatrix(num_rows, num_cols, game_window); 
+
+    // intialize game start status
+    hasStarted = false;
 }
 
-void Game::run() {
+void Game::mainMenu(RenderWindow* window) {
+    // main menu window (fixed size)
+    game_window->create(VideoMode(1000, 750), "Main Menu");
 
-    // setting mines randomly
-    game_matrix->set_gameboard();
-    set_is_first_click(true);
+    // loading fonts
+    Font font;  
+    if (!font.loadFromFile("assets/8bit.ttf")) {
+        return;
+    }
 
-    Clock reveal_clock;
-    int current_mine_index = 0;
+    Font font1; 
+    if (!font1.loadFromFile("assets/monospace.ttf")) {
+        return;
+    }
 
-    // reveal all cells for testing purposes
-    // game_matrix->reveal_all_cells();
+    // gif1 frames
+    Texture gif1Textures[20]; 
+    for (int i = 0; i < 20; ++i) {
+        if (!gif1Textures[i].loadFromFile("assets/gif1/g1f" + to_string(i + 1) + ".png")) {
+            return;
+        }
+    }
 
-    // running the window
-    while (game_window->isOpen()){
+    // gif2 frames
+    Texture gif2Textures[20];
+    for (int i = 0; i < 20; ++i) {
+        if (!gif2Textures[i].loadFromFile("assets/gif2/g2f" + to_string(i + 1) + ".png")) {
+            return;
+        }
+    }
 
-        Event event; // to close the window
-        while (game_window->pollEvent(event)){
-            if (event.type == Event:: Closed){
-                game_window->close();
-            } else if (event.type == Event::MouseButtonReleased && !(game_matrix->get_gameover())){  // don't take input after gameover
-                if (event.mouseButton.button == sf::Mouse::Left) {
-                    
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+    // help images
+    Texture helpImages[4];
+    for (int i = 0; i < 4; ++i) {
+        if (!helpImages[i].loadFromFile("assets/help/h" + to_string(i + 1) + ".png")) {
+            return;
+        }
+    }
 
-                    // ensure resizing window doesnt change coords
-                    sf::Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
-                    
-                    int mouseX = worldPos.x;
-                    int mouseY = worldPos.y;
+    // Creating buttons
+    RectangleShape playButton(Vector2f(175, 75));
+    playButton.setFillColor(BUTTON_COLOR);
+    playButton.setPosition(500, 300);
+    playButton.setOutlineThickness(2);
+    playButton.setOutlineColor(Color::White);
 
-                    int cell_index_x = mouseX / CELL_SIZE;
-                    int cell_index_y = mouseY / CELL_SIZE;
+    RectangleShape helpButton(Vector2f(175, 75));
+    helpButton.setFillColor(Color(BUTTON_COLOR));
+    helpButton.setPosition(625, 425);
+    helpButton.setOutlineThickness(2);
+    helpButton.setOutlineColor(Color::White);
 
-                    if(is_first_click){check_first_click(cell_index_x, cell_index_y);}
+    RectangleShape statsButton(Vector2f(200, 75));
+    statsButton.setFillColor(BUTTON_COLOR);
+    statsButton.setPosition(750, 550);
+    statsButton.setOutlineThickness(2);
+    statsButton.setOutlineColor(Color::White);
 
-                    // y * num_cols + x
-                    game_matrix->get_matrix()[cell_index_y* game_matrix->get_num_cols() + cell_index_x]->reveal(game_matrix);
+    RectangleShape nextButton(Vector2f(75, 50));
+    nextButton.setFillColor(BUTTON_COLOR);
+    nextButton.setPosition(850, 650);
+    nextButton.setOutlineThickness(2);
+    nextButton.setOutlineColor(Color::White);
 
+    // Labels
+    Text playText, helpText, statsText, nextText;
+    playText.setFont(font);
+    playText.setString("Play");
+    playText.setCharacterSize(30);
+    playText.setFillColor(Color::Black);
+    playText.setPosition(playButton.getPosition().x + 30, playButton.getPosition().y + 25);
 
-                    }
-                else if (event.mouseButton.button == sf::Mouse::Right) {
+    helpText.setFont(font);
+    helpText.setString("Help");
+    helpText.setCharacterSize(30);
+    helpText.setFillColor(Color::Black);
+    helpText.setPosition(helpButton.getPosition().x + 30, helpButton.getPosition().y + 25);
 
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*game_window);
+    statsText.setFont(font);
+    statsText.setString("Stats");
+    statsText.setCharacterSize(30);
+    statsText.setFillColor(Color::Black);
+    statsText.setPosition(statsButton.getPosition().x + 30, statsButton.getPosition().y + 25);
 
-                    // ensure resizing window doesnt change coords
-                    sf::Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
-                    
-                    int mouseX = worldPos.x;
-                    int mouseY = worldPos.y;
+    nextText.setFont(font1);
+    nextText.setString("Next");
+    nextText.setCharacterSize(18);
+    nextText.setFillColor(Color::Black);
+    nextText.setPosition(nextButton.getPosition().x + 15, nextButton.getPosition().y + 15);
 
-                    int cell_index_x = mouseX / CELL_SIZE;
-                    int cell_index_y = mouseY / CELL_SIZE;
+    // Status
+    bool isPlaying = false;
+    bool inMenu = true;
+    bool inHelp = false;
+    int currentImageIndex = 0;
 
-                    // y * num_cols + x
-                    game_matrix->get_matrix()[cell_index_y* NUM_OF_COLS + cell_index_x]->flag(game_window);
-                    
+    // Frame timing
+    float frameDuration = 0.1f; 
+    Clock frameClock;
+    int currentFrame = 0; // Index for current frame
+    bool firstGifFinished = false;
+
+    // while user on main menu window
+    while (window->isOpen()) {
+        Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window->close();
+            }
+
+            if (inMenu && !isPlaying) {
+                Vector2i mousePos = Mouse::getPosition(*window);
+
+                // hover effect
+                if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    playButton.setFillColor(Color(BUTTON_COLOR));  
+                    playButton.setOutlineColor(Color::Black);      
+                } else {
+                    playButton.setFillColor(Color(BUTTON_COLOR.r - 30, BUTTON_COLOR.g - 10, BUTTON_COLOR.b - 10));   // decrease brightness
+                    playButton.setOutlineColor(Color::White);      
                 }
-            } else if (event.type == Event::KeyPressed) {
-                if (event.key.code == Keyboard::Escape) {
-                    game_window->close();
+
+                if (helpButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    helpButton.setFillColor(Color(BUTTON_COLOR));
+                    helpButton.setOutlineColor(Color::Black);
+                } else {
+                    helpButton.setFillColor(Color(BUTTON_COLOR.r - 30, BUTTON_COLOR.g - 10, BUTTON_COLOR.b - 10));   // decrease brightness
+                    helpButton.setOutlineColor(Color::White);
+                }
+
+                if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    statsButton.setFillColor(Color(BUTTON_COLOR));
+                    statsButton.setOutlineColor(Color::Black);
+                } else {
+                    statsButton.setFillColor(Color(BUTTON_COLOR.r - 30, BUTTON_COLOR.g - 10, BUTTON_COLOR.b - 10));   // decrease brightness
+                    statsButton.setOutlineColor(Color::White);
+                }
+
+                // button controls
+                if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                    if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        isPlaying = true;   // Start the game
+                        inMenu = false;
+                    } else if (helpButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                        inHelp = true; // Show help page
+                        inMenu = false;
+                    } else if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    }
                 }
             }
 
-
+            // changing help instruction images
+            if (inHelp && event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                Vector2i mousePos = Mouse::getPosition(*window);
+                if (nextButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    currentImageIndex++; 
+                    if (currentImageIndex == 4) { 
+                        currentImageIndex = 0; 
+                        inHelp = false; 
+                        inMenu = true; 
+                    }
+                }
+            }
         }
 
-        game_window->clear();
+        // update current frame
+        if (frameClock.getElapsedTime().asSeconds() >= frameDuration) {
+            if (!firstGifFinished) {
+                currentFrame++;
+                if (currentFrame >= 20) {
+                    currentFrame = 0;  // reset for 2nd gif
+                    firstGifFinished = true;  // 1st gif done
+                }
+            } else {
+                currentFrame = (currentFrame + 1) % 20; // loop for 2nd gif
+            }
+            frameClock.restart(); // keep playing 2nd gif
+        }
 
-        // if game is over, reveal mines with animation, if game won, show mine locations with animation
-        if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
+        window->clear(MAIN_BG_COLOR); 
+
+        // Draw gif frames
+        Sprite backgroundSprite;
+        if (!firstGifFinished) {
+            backgroundSprite.setTexture(gif1Textures[currentFrame]); // Draw 1st gif
+        } else {
+            backgroundSprite.setTexture(gif2Textures[currentFrame]); // Draw 2nd gif
+        }
+        window->draw(backgroundSprite);
+
+        // Draw everything else
+        if (inMenu) {
+            window->draw(playButton);
+            window->draw(playText);
+            window->draw(helpButton);
+            window->draw(helpText);
+            window->draw(statsButton);
+            window->draw(statsText);
+        } else if (inHelp) {
+            Sprite helpSprite;
+            helpSprite.setTexture(helpImages[currentImageIndex]); 
+            window->draw(helpSprite);
+
+            window->draw(nextButton);
+            window->draw(nextText);
+        }
+
+        window->display(); 
+
+        if (isPlaying) {
+            run(); 
+            inMenu = true;
+            isPlaying = false;
+        }
+    }
+}
+
+void Game::run() {
+    // game window (dynamic size)
+    game_window->create(VideoMode(CELL_SIZE * game_matrix->get_num_cols(),
+                                  CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE);
+
+    // shape for progress bar (hollow)
+    RectangleShape progressBarBg(Vector2f(game_window->getSize().x / 4, 20)); 
+    progressBarBg.setFillColor(Color(150, 150, 150));    
+    progressBarBg.setPosition((game_window->getSize().x) * 3 / 5, CELL_SIZE * game_matrix->get_num_rows() + 15); 
+
+    // shape for progress bar (filled)
+    RectangleShape progressBar(Vector2f(0, 20));             
+    progressBar.setFillColor(Color(50, 200, 50));                 
+    progressBar.setPosition((game_window->getSize().x) * 3 / 5, CELL_SIZE * game_matrix->get_num_rows() + 15);  
+
+    // shape for space behind progress bar
+    RectangleShape extraBg(Vector2f(game_window->getSize().x, 50)); 
+    extraBg.setFillColor(Color(153, 0, 0)); 
+    extraBg.setPosition(0, CELL_SIZE * game_matrix->get_num_rows());
+
+    game_matrix->set_gameboard();
+    set_is_first_click(true);
+
+    int current_mine_index = 0;
+    // reveal all cells for testing purposes
+    // game_matrix->reveal_all_cells();
+    int totalCells = game_matrix->get_num_rows() * game_matrix->get_num_cols();
+
+    // variable to store time when game ends
+    float finalTime = 0.0;
+    bool timerStopped = false;  // time stopper
+    bool timerStarted = false;  // time starter
+
+    // load font for timer
+    Font timerfont; 
+    if (!timerfont.loadFromFile("assets/monospace.ttf")) {
+        return;
+    }
+
+    // int previousCellIdx = -1;
+    while (game_window->isOpen()) {
+        Event event;
+        while (game_window->pollEvent(event)) {
+
+            Vector2i mousePos = Mouse::getPosition(*game_window);
+            Vector2f worldPos = game_window->mapPixelToCoords(mousePos);
+            int cell_index_x = worldPos.x / CELL_SIZE;
+            int cell_index_y = worldPos.y / CELL_SIZE; 
+            int cell_index = cell_index_y * game_matrix->get_num_cols() + cell_index_x;
+            // Cell* cell = nullptr;
+
+            // if (cell_index >= 0 && cell_index < totalCells) {
+            //     cell = game_matrix->get_matrix()[cell_index];
+            // }
+            if (event.type == Event::Closed) {
+                game_window->close();
+            } else if (event.type == Event::MouseButtonReleased && !game_matrix->get_gameover()) {
+
+                // ensuring clicking progress bar doesn't cause errors
+                if (totalCells > cell_index) {
+                    if (event.mouseButton.button == Mouse::Left) {
+                        // start the timer on first click
+                        if (!timerStarted) {
+                            game_timer.restart();  // reset timer
+                            timerStarted = true;   // update timer state
+                        }
+
+                        if (is_first_click){
+                            check_first_click(cell_index_x, cell_index_y);
+                        }
+                        
+                        game_matrix->get_matrix()[cell_index]->reveal(game_matrix);
+                    } else if (event.mouseButton.button == Mouse::Right) {
+			            if (!timerStarted) {
+                            game_timer.restart();  // reset timer
+                            timerStarted = true;   // update timer state
+                        }
+                        game_matrix->get_matrix()[cell_index]->flag(game_window);
+                    }
+                }
+            } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+                game_window->close();
+            }
+
+        //     // hover off settings
+        //     if (previousCellIdx != -1) {
+        //         Cell* previousCell = game_matrix->get_matrix()[previousCellIdx];
+        //         if (previousCell && !previousCell->get_is_reveal()) {
+        //             if ((previousCell->get_location()[0] + previousCell->get_location()[1]) % 2 == 0) {
+        //                 previousCell->set_color(CELL_COLOR_2); 
+        //             } else {
+        //                 previousCell->set_color(CELL_COLOR_1); 
+        //             }
+        //         }
+        //     }
+
+        //     // hover for cell
+        //     if (cell && !cell->get_is_reveal()) { // check if cell is unrevealed
+        //         Color hoverColor = Color(CELL_COLOR_1.r + 40, CELL_COLOR_1.g + 40, CELL_COLOR_1.b + 40);
+        //         cell->set_color(hoverColor);
+        //     }
+
+        //     // update last cell
+        //     previousCellIdx = cell_index;
+        }
+
+        // progress bar formula
+        int revealedCells = game_matrix->get_revealed_cells();  
+        float revealPercentage = (float)revealedCells / (totalCells - game_matrix->get_num_mines());
+        progressBar.setSize(Vector2f(game_window->getSize().x / 4 * revealPercentage, 20));  
+
+        // draw on window
+        game_window->clear();
+        game_window->draw(extraBg);
+        game_window->draw(progressBarBg);
+        game_window->draw(progressBar);
+
+        // Timer settings
+        Time elapsed = game_timer.getElapsedTime();
+        string timerText;
+
+        if (!timerStarted) {
+            timerText = "Time: 0s"; // display 0 if not started
+        } else if (!game_matrix->get_gameover()) {
+            finalTime = elapsed.asSeconds();  // update time till game running
+            timerText = "Time: " + to_string((int)(finalTime)) + "s";
+        } else if (!timerStopped) {
+            timerStopped = true; // stop timer once game over
+        }
+
+        if (timerStopped) {
+            timerText = "Time: " + to_string((int)(finalTime)) + "s"; // display final time
+        }
+
+        // displaying timer
+        Text timerDisplay(timerText, timerfont);
+        timerDisplay.setCharacterSize(20);
+        timerDisplay.setFillColor(Color::White);
+        timerDisplay.setPosition((game_window->getSize().x * 3 / 25), CELL_SIZE * game_matrix->get_num_rows() + 12.5);
+        game_window->draw(timerDisplay);
+
+        // game over animation
+         if ((game_matrix->get_gameover() || game_matrix->check_game_win()) && 
             (current_mine_index < game_matrix->get_mine_locations().size())) {
             
-            if (reveal_clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
+            if (game_timer.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
                 int location = game_matrix->get_mine_locations()[current_mine_index];
                 Cell* mine = game_matrix->get_matrix()[location];
 
-                // animate depending on win or lose
                 if (game_matrix->get_gameover()) {
-                    // unflag and reveal mine
                     if (!mine->get_is_reveal()) {
                         if (mine->get_is_flagged()) {
                             mine->flag(game_window);
@@ -104,17 +395,12 @@ void Game::run() {
                 }
 
                 current_mine_index++;
-                reveal_clock.restart();
+                game_timer.restart();
             }
         }
 
-        // display the matrix
         game_matrix->display(game_window);
-
-        // display the window
         game_window->display();
-
-        
     }
 }
 
@@ -154,3 +440,4 @@ Game:: ~Game() {
     delete game_window;
     delete game_matrix;
 }
+ 

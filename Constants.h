@@ -48,6 +48,8 @@ const Color NUMBER_COLOR = Color(0, 0, 255);
 const Color MINE_COLOR = Color(255, 0, 0);
 const Color POWERUP_COLOR = Color(0, 0, 205);
 
+const Color MAIN_BG_COLOR = Color(170, 215, 81);
+const Color BUTTON_COLOR = Color(102, 178, 225);
 // Assets path
 const string ASSETS_PATH = "assets/";
 

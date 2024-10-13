@@ -1,3 +1,4 @@
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -16,11 +17,15 @@ class Game{
         RenderWindow *game_window;
         CellMatrix *game_matrix;
         bool is_first_click;
+        Clock game_timer;
+        bool hasStarted;
 
     public:
         Game(int num_cols, int num_rows);
         void run();
         void check_first_click(int cell_index_x, int cell_index_y);
+        void mainMenu(sf::RenderWindow* window);
+
 
         // getters and setters
         RenderWindow* get_game_window();
