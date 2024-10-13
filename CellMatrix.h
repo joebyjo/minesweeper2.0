@@ -55,7 +55,7 @@ class CellMatrix{
         void set_num_mines(int num_mines);
         void set_mine_locations(vector<int> mine_locations);
         void set_gameover(bool state);
-        RenderWindow *set_game_window();
+        void set_game_window(RenderWindow* game_window);
 
 
         ~CellMatrix();

@@ -290,7 +290,7 @@ void CellMatrix:: set_matrix(Cell **matrix) {
 void CellMatrix:: set_gameover(bool is_gameover) {
     this->is_gameover = is_gameover;
 }
-RenderWindow *CellMatrix::set_game_window() { return this->game_window = game_window; };
+void CellMatrix:: set_game_window(RenderWindow* game_window) { this->game_window = game_window; };
 
 bool CellMatrix::get_gameover() {
     return is_gameover;
