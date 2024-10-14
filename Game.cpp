@@ -178,100 +178,167 @@ void Game::run() {
     }
 }
 
-// // function to display highscores
-// void Game::displayStats(RenderWindow* window) {
-//     // loading font
-//     Font font;
-//     if (!font.loadFromFile("assets/monospace.ttf")) {
-//         return;
-//     }
+// function to display highscores
+void Game::display_stats(RenderWindow* window) {
+    // loading font
+    Font font;
+    if (!font.loadFromFile(ASSETS_PATH+"monospace2.ttf")) {
+        return;
+    }
 
-//     // importing csv
-//     ifstream file("game_highscores.csv");
-//     if (!file.is_open()) {
-//         return;
-//     }
+    // importing csv
+    ifstream file(USERDATA_FILE);
+    if (!file.is_open()) {
+        return;
+    }
 
-//     string line;
-//     vector<string> names;
-//     vector<string> times;
-//     vector<string> difficulties;
-//     vector<string> scores;
+    string line;
+    vector<string> names, scores, accuracies, difficulties;
 
-//     // reading csv 
-//     while (getline(file, line)) {
-//         istringstream ss(line);
-//         string name, time, difficulty, score;
+    // // skip first line
+    // getline(file, line);
 
-//         getline(ss, name, ',');
-//         getline(ss, time, ',');
-//         getline(ss, difficulty, ',');
-//         getline(ss, score, ',');
+    // reading csv and pushing to corresponding vectors
+    while (getline(file, line)) {
+        istringstream ss(line);
+        string name, score, accuracy, difficulty;
 
-//         names.push_back(name);
-//         times.push_back(time);
-//         difficulties.push_back(difficulty);
-//         scores.push_back(score);
-//     }
+        getline(ss, name, ',');
+        getline(ss, score, ',');
+        getline(ss, accuracy, ',');
+        getline(ss, difficulty, ',');
 
-//     file.close(); 
+        names.push_back(name);
+        scores.push_back(score);
+        accuracies.push_back(accuracy);
+        difficulties.push_back(difficulty);
+    }
 
-//     // variables to store max lengths
-//     int maxNameLength = 0;
-//     int maxTimeLength = 0;
-//     int maxDifficultyLength = 0;
-//     int maxScoreLength = 0;
+    file.close();
 
-//     // finding max lengths
-//     for (int i = 0; i < names.size(); ++i) {
-//         if (names[i].length() > maxNameLength) {
-//             maxNameLength = names[i].length();
-//         } 
-//         if (times[i].length() > maxTimeLength) {
-//             maxTimeLength = times[i].length();
-//         }
-//         if (difficulties[i].length() > maxDifficultyLength) {
-//             maxDifficultyLength = difficulties[i].length();
-//         }
-//         if (scores[i].length() > maxScoreLength) {
-//             maxScoreLength = scores[i].length();
-//         }
-//     }
+    // settings headers
+    vector<string> headers = { "Username", "Score", "Accuracy", "Difficulty" };
 
-//     // adding extra spaces to align everything
-//     vector<Text> texts; 
-//     for (int i = 0; i < names.size(); ++i) {
-//         string displayString = 
-//             names[i] + string(maxNameLength - names[i].length() + 2, ' ') +
-//             times[i] + string(maxTimeLength - times[i].length() + 2, ' ') +
-//             difficulties[i] + string(maxDifficultyLength - difficulties[i].length() + 2, ' ') +
-//             scores[i];
+    // 2D vector for data
+    vector<vector<string>> data;
+    for (int i = 0; i < names.size(); ++i) {
+        data.push_back({ names[i], scores[i], accuracies[i], difficulties[i] });
+    }
 
-//         // text settings for current row
-//         Text text(displayString, font);
-//         text.setCharacterSize(20);
-//         text.setFillColor(Color::White);
-//         text.setPosition(100, 100 + i * 30); 
+    // get max width of each col
+    vector<int> col_widths(headers.size(), 0);
+    for (int i = 0; i < headers.size(); ++i) {
+        col_widths[i] = headers[i].length();
+    }
+    for (auto& row : data) {
+        for (int i = 0; i < row.size(); ++i) {
+            if (row[i].length() > col_widths[i]) {
+                col_widths[i] = row[i].length();
+            }
+        }
+    }
 
-//         texts.push_back(text); 
-//     }
+    // adding padding
+    for (int i = 0; i < col_widths.size(); ++i) {
+        col_widths[i] += 2;
+    }
 
-//     while (window->isOpen()) {
-//         Event event;
-//         window->clear(); 
+    // total table width used for centering
+    int total_table_width = 0;
+    for (int width : col_widths) {
+        total_table_width += width;
+    }
+    total_table_width += (headers.size() - 1) * 10; 
 
-//         // display text
-//         for (int i = 0; i < texts.size(); ++i) {
-//             window->draw(texts[i]);
-//         }
-//         while (window->pollEvent(event)) {
-//             if (event.type == Event::Closed) {
-//                 window->close();
-//             }
-//         }
-//         window->display();
-//     }
-// }
+    // calculating offset to centre align table
+    int x_offset = 100; //(windowWidth - total_table_width) / 2 - total_table_width;
+
+    vector<Text> texts;
+
+    // function to create borders
+    auto create_border = [&](wstring left, wstring mid, wstring right) {
+        wstring border = left;
+        for (int i = 0; i < col_widths.size(); ++i) {
+            border += wstring(col_widths[i], L'─');
+            if (i != col_widths.size() - 1) {
+                border += mid;
+            }
+        }
+        border += right;
+        return border;
+    };
+
+    // top border
+    wstring top_border = create_border(L"┌", L"┬", L"┐");
+    Text top_borderText(top_border, font);
+    top_borderText.setCharacterSize(20);
+    top_borderText.setFillColor(Color::White);
+    top_borderText.setPosition(x_offset, 100);
+    texts.push_back(top_borderText);
+
+    // function to centre text
+    auto center_text = [&](string text, int width) {
+        int padding = width - text.length();
+        int left_padding = padding / 2;
+        int right_padding = padding - left_padding;
+        return wstring(left_padding, L' ') + wstring(text.begin(), text.end()) + wstring(right_padding, L' ');
+    };
+
+    wstring header_row = L"│";
+    for (int i = 0; i < headers.size(); ++i) {
+        header_row += center_text(headers[i], col_widths[i]) + L"│";
+    }
+    Text header_text(header_row, font);
+    header_text.setCharacterSize(20);
+    header_text.setFillColor(Color::White);
+    header_text.setPosition(x_offset, 130);
+    texts.push_back(header_text);
+
+    wstring mid_border = create_border(L"├", L"┼", L"┤");
+    Text mid_border_text(mid_border, font);
+    mid_border_text.setCharacterSize(20);
+    mid_border_text.setFillColor(Color::White);
+    mid_border_text.setPosition(x_offset, 160);
+    texts.push_back(mid_border_text);
+
+    // data rows
+    for (int i = 0; i < data.size(); ++i) {
+        wstring row = L"│";
+        for (int j = 0; j < data[i].size(); ++j) {
+            row += center_text(data[i][j], col_widths[j]) + L"│";
+        }
+        Text data_text(row, font);
+        data_text.setCharacterSize(20);
+        data_text.setFillColor(Color::White);
+        data_text.setPosition(x_offset, 190 + i * 30);
+        texts.push_back(data_text);
+    }
+
+    // bottom border
+    wstring bottom_border = create_border(L"└", L"┴", L"┘");
+    Text bottom_border_text(bottom_border, font);
+    bottom_border_text.setCharacterSize(20);
+    bottom_border_text.setFillColor(Color::White);
+    bottom_border_text.setPosition(x_offset, 190 + data.size() * 30);
+    texts.push_back(bottom_border_text);
+
+    // render table
+    while (window->isOpen()) {
+        Event event;
+        window->clear();
+
+        for (int i = 0; i < texts.size(); ++i) {
+            window->draw(texts[i]);
+        }
+
+        while (window->pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window->close();
+            }
+        }
+        window->display();
+    }
+}
 
 void Game::mainMenu(RenderWindow* window) {
     // main menu window (fixed size)
@@ -420,7 +487,7 @@ void Game::mainMenu(RenderWindow* window) {
                         inHelp = true; // Show help page
                         inMenu = false;
                     } else if (statsButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                        // displayStats(window);
+                        display_stats(window);
                     }
                 }
             }

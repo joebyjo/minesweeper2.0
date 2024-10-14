@@ -29,7 +29,7 @@ class Game{
         bool play_animation();
         void append_highscore(string username,int score,int time_taken,string difficulty);
         bool check_game_win();
-        void displayStats(RenderWindow* window);
+        void display_stats(RenderWindow* window);
 
         // getters and setters
         RenderWindow* get_game_window();
