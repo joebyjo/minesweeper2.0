@@ -45,9 +45,10 @@ void Game::run() {
     game_matrix->set_gameboard();
     set_is_first_click(true);
 
-    int current_mine_index = 0;
     // reveal all cells for testing purposes
     // game_matrix->reveal_all_cells();
+
+    int current_mine_index = 0;
     int total_cells = game_matrix->get_num_rows() * game_matrix->get_num_cols();
 
     // variable to store time when game ends
@@ -137,7 +138,7 @@ void Game::run() {
         // draw on window
         game_window->clear();
 
-        // Timer settings
+        // timer settings
         int elapsed = (int)(game_timer.getElapsedTime().asSeconds());
         string timer_text;
 
@@ -170,7 +171,7 @@ void Game::run() {
         } if (check_game_win()){
             if (play_animation()) {
                 int score = (game_matrix->get_num_mines() * 1000)/ final_time;
-                append_highscore("joe",score,final_time,"easy");
+                append_stats("joe",score,final_time,"easy");
             }
         }
 
@@ -185,7 +186,7 @@ void Game::run() {
     delete game_matrix;
 }
 
-// function to display highscores
+// function to display stats
 void Game::display_stats(RenderWindow* window) {
     // loading font
     Font font;
@@ -203,7 +204,7 @@ void Game::display_stats(RenderWindow* window) {
     vector<string> names, scores, accuracies, difficulties;
 
     // // skip first line
-    // getline(file, line);
+    getline(file, line);
 
     // reading csv and pushing to corresponding vectors
     while (getline(file, line)) {
@@ -527,10 +528,10 @@ void Game::main_menu(RenderWindow* window) {
                 if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                     if (play_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                         selecting_difficulty = true;
-                        // is_playing = true;   // Start the game
+                        // is_playing = true;
                         in_menu = false;
                     } else if (help_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                        in_help = true; // Show help page
+                        in_help = true; // show help page
                         in_menu = false;
                     } else if (stats_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                         display_stats(window);
@@ -556,7 +557,7 @@ void Game::main_menu(RenderWindow* window) {
         if (selecting_difficulty) {
             Vector2i mouse_pos = Mouse::getPosition(*window);
 
-            // Easy Button hover effect
+            // hover effect
             if (easy_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                 easy_button.setFillColor(Color(BUTTON_COLOR));
                 easy_button.setOutlineColor(Color::Black);
@@ -565,7 +566,6 @@ void Game::main_menu(RenderWindow* window) {
                 easy_button.setOutlineColor(Color::White);
             }
 
-            // Medium Button hover effect
             if (medium_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                 medium_button.setFillColor(Color(BUTTON_COLOR));
                 medium_button.setOutlineColor(Color::Black);
@@ -574,7 +574,7 @@ void Game::main_menu(RenderWindow* window) {
                 medium_button.setOutlineColor(Color::White);
             }
 
-            // Hard Button hover effect
+
             if (hard_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                 hard_button.setFillColor(Color(BUTTON_COLOR));
                 hard_button.setOutlineColor(Color::Black);
@@ -583,21 +583,21 @@ void Game::main_menu(RenderWindow* window) {
                 hard_button.setOutlineColor(Color::White);
             }
             
-            // Handle mouse clicks to select difficulty
+            // select difficutly based on button
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 if (easy_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                    mine_percentage = 0.1; // Easy difficulty
-                    is_playing = true; // Start game after difficulty is chosen
+                    mine_percentage = 0.1;
+                    is_playing = true;
                     selecting_difficulty = false;
                 }
                 if (medium_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                    mine_percentage = 0.5; // Medium difficulty
-                    is_playing = true; // Start game
+                    mine_percentage = 0.2;
+                    is_playing = true;
                     selecting_difficulty = false;
                 }
                 if (hard_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                    mine_percentage = 0.7; // Hard difficulty
-                    is_playing = true; // Start game
+                    mine_percentage = 0.3;
+                    is_playing = true; 
                     selecting_difficulty = false;
                 }
             }
@@ -663,12 +663,12 @@ void Game::main_menu(RenderWindow* window) {
     }
 }
 
-void Game::append_highscore(string username,int score,int time_taken,string difficulty) {
+void Game::append_stats(string username,int score,int time_taken,string difficulty) {
     // open file and append game stats to csv file
-    ofstream highscores_file;
-    highscores_file.open(USERDATA_FILE, ios::app);
-    highscores_file << username << "," << score << "," << time_taken << "," << difficulty << endl;
-    highscores_file.close();
+    ofstream stats_file;
+    stats_file.open(USERDATA_FILE, ios::app);
+    stats_file << username << "," << score << "," << time_taken << "," << difficulty << endl;
+    stats_file.close();
 }
 
 void Game::check_first_click(int cell_index_x, int cell_index_y) {

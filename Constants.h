@@ -46,12 +46,12 @@ const Color EMPTY_COLOR_LIGHT = Color(229,194,159);
 const Color EMPTY_COLOR_DARK = Color(215,184,153);
 const Color NUMBER_COLOR = Color(0, 0, 255);
 const Color MINE_COLOR = Color(255, 0, 0);
-const Color POWERUP_COLOR = Color(0, 0, 205);
+const Color POWERUP_COLOR = Color(255, 215, 0);
 
 const Color MAIN_BG_COLOR = Color(170, 215, 81);
 const Color BUTTON_COLOR = Color(102, 178, 225);
 // Assets path
 const string ASSETS_PATH = "assets/";
-const string USERDATA_FILE = "game_highscores.csv";
+const string USERDATA_FILE = "game_stats.csv";
 
 #endif

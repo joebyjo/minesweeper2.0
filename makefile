@@ -6,7 +6,7 @@ TARGET = game
 SOURCES = main.cpp Game.cpp Cell.cpp CellMatrix.cpp Empty.cpp Mine.cpp Number.cpp Powerup.cpp
 
 # user data file
-USERDATA_FILE = game_highscores.csv
+USERDATA_FILE = game_stats.csv
 
 UNAME_S := $(shell uname -s)
 
