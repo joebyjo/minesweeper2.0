@@ -7,7 +7,7 @@
 Game::Game(int num_cols, int num_rows) {
     
     // creating the window
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE);
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE, Style::Titlebar | Style::Close);
     // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     // game_window->setPosition(sf::Vector2i((desktop.width - 1000)/8, (desktop.height - 750)/8));
     
@@ -25,7 +25,7 @@ void Game::run() {
 
     // game window (dynamic size)
     game_window->create(VideoMode(CELL_SIZE * game_matrix->get_num_cols(),
-                                  CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE);
+                                  CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE, Style::Titlebar | Style::Close);
 
     // shape for progress bar (hollow)
     RectangleShape progress_bar_bg(Vector2f(game_window->getSize().x / 4, 20)); 
@@ -463,7 +463,7 @@ void Game::display_stats(RenderWindow* window) {
 
 void Game::main_menu(RenderWindow* window) {
     // main menu window (fixed size)
-    game_window->create(VideoMode(1000, 750), "Main Menu");
+    game_window->create(VideoMode(1000, 750), "Main Menu", Style::Titlebar | Style::Close);
 
     // loading fonts
     Font font;  
