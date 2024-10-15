@@ -3,7 +3,7 @@
 
 int main() {
     Game minesweeper(NUM_OF_COLS, NUM_OF_ROWS);
-    minesweeper.mainMenu(minesweeper.get_game_window());  // Pass the game window to mainMenu
+    minesweeper.main_menu(minesweeper.get_game_window());  // Pass the game window to mainMenu
 
     // Game minesweeper3(5, 7);
     // minesweeper3.run();

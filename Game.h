@@ -26,7 +26,7 @@ class Game{
         Game(int num_cols, int num_rows);
         void run();
         void check_first_click(int cell_index_x, int cell_index_y);
-        void mainMenu(sf::RenderWindow* window);
+        void main_menu(sf::RenderWindow* window);
         bool play_animation();
         void append_highscore(string username,int score,int time_taken,string difficulty);
         bool check_game_win();
