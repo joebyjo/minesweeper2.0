@@ -55,6 +55,7 @@ void Game::run() {
     int final_time = 0.0;
     bool timer_stopped = false;  // time stopper
     bool timer_started = false;  // time starter
+    bool show_popup = false;
 
     // load font for timer
     Font timer_font; 
@@ -165,13 +166,29 @@ void Game::run() {
         // if game end, reveal mines with animation
         if (game_matrix->get_gameover()){
             if (play_animation()) { 
-                // TODO
+                display_popup(false);
+                
+                delete game_matrix;
+                game_matrix = nullptr;
+                return;
+
             }
 
         } if (check_game_win()){
             if (play_animation()) {
                 int score = (game_matrix->get_num_mines() * 1000)/ final_time;
-                append_stats("joe",score,final_time,"easy");
+
+                string difficulty;
+                if (mine_percentage==PERCENTAGE_MINES_EASY) { difficulty = "Easy";}
+                else if (mine_percentage==PERCENTAGE_MINES_MEDIUM) { difficulty = "Medium";}
+                else if (mine_percentage==PERCENTAGE_MINES_HARD) { difficulty = "Hard";}
+
+
+                append_stats("joe",score,final_time,difficulty);
+                display_popup(true);
+                delete game_matrix;
+                game_matrix = nullptr;
+                return;
             }
         }
 
@@ -209,23 +226,23 @@ void Game::display_stats(RenderWindow* window) {
     // reading csv and pushing to corresponding vectors
     while (getline(file, line)) {
         istringstream ss(line);
-        string name, score, accuracy, difficulty;
+        string name, score, time_taken, difficulty;
 
         getline(ss, name, ',');
         getline(ss, score, ',');
-        getline(ss, accuracy, ',');
+        getline(ss, time_taken, ',');
         getline(ss, difficulty, ',');
 
         names.push_back(name);
         scores.push_back(score);
-        accuracies.push_back(accuracy);
+        accuracies.push_back(time_taken);
         difficulties.push_back(difficulty);
     }
 
     file.close();
 
     // settings headers
-    vector<string> headers = { "Username", "Score", "Accuracy", "Difficulty" };
+    vector<string> headers = { "Username", "Score", "Time Taken", "Difficulty" };
 
     // 2D vector for data
     vector<vector<string>> data;
@@ -525,7 +542,7 @@ void Game::main_menu(RenderWindow* window) {
                 }
 
                 // button controls
-                if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                     if (play_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                         selecting_difficulty = true;
                         // is_playing = true;
@@ -540,7 +557,7 @@ void Game::main_menu(RenderWindow* window) {
             }
 
             // changing help instruction images
-            if (in_help && event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+            if (in_help && event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 Vector2i mouse_pos = Mouse::getPosition(*window);
                 if (next_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
                     currentImageIndex++; 
@@ -586,17 +603,17 @@ void Game::main_menu(RenderWindow* window) {
             // select difficutly based on button
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 if (easy_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                    mine_percentage = 0.1;
+                    mine_percentage = PERCENTAGE_MINES_EASY;
                     is_playing = true;
                     selecting_difficulty = false;
                 }
                 if (medium_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                    mine_percentage = 0.2;
+                    mine_percentage = PERCENTAGE_MINES_MEDIUM;
                     is_playing = true;
                     selecting_difficulty = false;
                 }
                 if (hard_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                    mine_percentage = 0.3;
+                    mine_percentage = PERCENTAGE_MINES_HARD;
                     is_playing = true; 
                     selecting_difficulty = false;
                 }
@@ -682,11 +699,6 @@ void Game::check_first_click(int cell_index_x, int cell_index_y) {
 bool Game::play_animation() {
     static Clock clock;
     static int current_mine_index = 0;
-    static bool animation_done = false;
-
-    if (animation_done) {
-        return false; // if done, then dont continue
-    }
 
     if (current_mine_index < game_matrix->get_mine_locations().size()) {
         if (clock.getElapsedTime().asMilliseconds() >= ( ANIMATION_DURATION / (game_matrix->get_num_cols()*game_matrix->get_num_rows()*mine_percentage))) {
@@ -713,11 +725,92 @@ bool Game::play_animation() {
 
     // check if all mines revealed
     if (current_mine_index >= game_matrix->get_mine_locations().size()) {
-        animation_done = true;
+        current_mine_index = 0;
         return true;
     }
 
     return false;
+}
+
+void Game::display_popup(bool game_status) {
+    // Load font
+    Font font;
+    if (!font.loadFromFile("assets/monospace.ttf")) {
+        return;
+    }
+
+    // Create a translucent background for the popup
+    RectangleShape popup_bg(Vector2f(game_window->getSize().x / 2, game_window->getSize().y / 3));
+    popup_bg.setFillColor(Color(0, 0, 0, 150));  // Black with some transparency
+    popup_bg.setPosition(game_window->getSize().x / 4, game_window->getSize().y / 3);
+
+    // Create text for the win/loss message
+    Text resultText;
+    resultText.setFont(font);
+    resultText.setCharacterSize(40);
+
+    if (game_status) {
+        resultText.setString("You Win!");
+        resultText.setFillColor(Color::Green);
+    } else if (game_status) {
+        resultText.setString("Game Over");
+        resultText.setFillColor(Color::Red);
+    }
+
+    // Center the result text
+    FloatRect textRect = resultText.getLocalBounds();
+    resultText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    resultText.setPosition(game_window->getSize().x / 2.0f, game_window->getSize().y / 2.5f);
+
+    // Create a "Return to Menu" button
+    RectangleShape returnButton(Vector2f(200, 50));
+    returnButton.setFillColor(Color(50, 150, 50));
+    returnButton.setPosition(game_window->getSize().x / 2.0f - 100, game_window->getSize().y / 2.0f);
+
+    // Set up text for the button
+    Text returnText;
+    returnText.setFont(font);
+    returnText.setCharacterSize(30);
+    returnText.setString("Return to Menu");
+    returnText.setFillColor(Color::White);
+
+    FloatRect returnTextRect = returnText.getLocalBounds();
+    returnText.setOrigin(returnTextRect.left + returnTextRect.width / 2.0f, returnTextRect.top + returnTextRect.height / 2.0f);
+    returnText.setPosition(returnButton.getPosition().x + returnButton.getSize().x / 2, returnButton.getPosition().y + returnButton.getSize().y / 2);
+
+    // Popup display and event handling loop
+    bool popup_active = true;
+    while (popup_active) {
+        Event event;
+        while (game_window->pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                game_window->close();
+                return;
+            }
+
+            if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                Vector2i mousePos = Mouse::getPosition(*game_window);
+
+                // Check if the "Return to Menu" button is clicked
+                if (returnButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    popup_active = false;  // Exit the popup loop
+                    return;
+                }
+            }
+        }
+
+        // Clear and draw the popup
+        game_window->clear();
+        game_matrix->display(game_window);  // Keep displaying the game in the background
+
+        // Draw popup elements
+        game_window->draw(popup_bg);
+        game_window->draw(resultText);
+        game_window->draw(returnButton);
+        game_window->draw(returnText);
+
+        game_window->display();
+    }
 }
 
 

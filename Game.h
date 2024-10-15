@@ -30,6 +30,7 @@ class Game{
         bool play_animation();
         void append_stats(string username,int score,int time_taken,string difficulty);
         bool check_game_win();
+        void display_popup(bool game_status);
         void display_stats(RenderWindow* window);
 
         // getters and setters

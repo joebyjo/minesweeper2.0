@@ -16,7 +16,9 @@ const int NUM_OF_ROWS = 15;
 const int NUM_OF_COLS = 20;
 
 // number of mines
-const float PERCENTAGE_MINES = 0.1;
+const float PERCENTAGE_MINES_EASY = 0.1;
+const float PERCENTAGE_MINES_MEDIUM = 0.15;
+const float PERCENTAGE_MINES_HARD = 0.25;
 
 // duration of animation in milliseconds
 const float ANIMATION_DURATION = 3000;
@@ -26,9 +28,6 @@ const int XRAY_DURATION = 2000;
 
 // number of Powerups in the game
 const int NUM_POWERUPS = 1;
-
-// delay between mine reveal in milliseconds
-const float ANIMATION_DELAY = ANIMATION_DURATION / (NUM_OF_COLS*NUM_OF_ROWS*PERCENTAGE_MINES);
 
 // padding
 const float NUMBER_CELL_PADDING = 7.5;
