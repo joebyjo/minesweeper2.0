@@ -211,6 +211,21 @@ void Game::display_stats(RenderWindow* window) {
         return;
     }
 
+    // button to go back 
+    RectangleShape back_button(Vector2f(75, 50));
+    back_button.setFillColor(BUTTON_COLOR);
+    back_button.setPosition(850, 650);
+    back_button.setOutlineThickness(2);
+    back_button.setOutlineColor(Color::White);
+
+    // label for back button
+    Text back_text;
+    back_text.setFont(font);
+    back_text.setString("Back");
+    back_text.setCharacterSize(18);
+    back_text.setFillColor(Color::Black);
+    back_text.setPosition(back_button.getPosition().x + 15, back_button.getPosition().y + 15);
+
     // importing csv
     ifstream file(USERDATA_FILE);
     if (!file.is_open()) {
@@ -359,8 +374,19 @@ void Game::display_stats(RenderWindow* window) {
         while (window->pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window->close();
+
+            } else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                Vector2i mousePos = Mouse::getPosition(*window);
+                Vector2f worldPos = window->mapPixelToCoords(mousePos);
+
+                // action if back button is clicked
+                if (back_button.getGlobalBounds().contains(worldPos)) {
+                    return; 
+                }
             }
         }
+        window->draw(back_button);
+        window->draw(back_text);
         window->display();
     }
 }
