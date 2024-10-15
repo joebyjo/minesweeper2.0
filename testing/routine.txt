@@ -1,0 +1,29 @@
+//-------------------------TESTING ROUTINE-------------------------//
+
+Because our program is a computer game that generates nearly everything randomly, also, lot of things depend on users input. It makes it very hard to automate testing.
+We also used random seed = 0 to make game constant.
+So, Whenever we make a change to the game we repeat the following routine.
+
+///Routine///
+
+
+                 -Action-                                               -Expected outcome-
+
+********Testing Game Matrix interaction********
+
+1- First Click on Bomb                                          Turn to another type of cell accordingly, Number cell around it reduces by one
+2- Click on Empty cell                                          Reveals a large chunk of cells, Alternating colors, All the borders are number
+3- Click on Number Cell                                         Reveals a number cell, number shown is equal to mines around the cell                                                             
+4- Click on powerup (xray)                                      Shows all the mine for few seconds
+5- Click on powerup (supernumber)                               Flags all the neighboring bombs
+6- Flag a cell                                                  Flags a cell
+7- Reveal the flag cell                                         Doesn't let it reveal it
+8- Flag the same cell again                                     Unflags it
+9- Try to flag a revealed cell                                  Doesn't let flag it
+10-Click on Bomb                                                Animation revealing all the bomb, Game Over
+
+
+
+
+///Player Testing///
+Since the game is random, there are infinite possible interactions that the player can do. With infinite possbile interactions come unforseen bugs. To discover these unforseen problems we made our friends test the game every day.
