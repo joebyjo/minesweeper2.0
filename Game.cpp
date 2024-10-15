@@ -765,44 +765,44 @@ void Game::display_popup(bool game_status) {
         return;
     }
 
-    // Create a translucent background for the popup
+    // transparent bg for popup
     RectangleShape popup_bg(Vector2f(game_window->getSize().x / 2, game_window->getSize().y / 3));
-    popup_bg.setFillColor(Color(0, 0, 0, 150));  // Black with some transparency
-    popup_bg.setPosition(game_window->getSize().x / 4, game_window->getSize().y / 3);
+    popup_bg.setFillColor(Color(0, 0, 0, 150)); 
+    popup_bg.setPosition(game_window->getSize().x / 4, game_window->getSize().y / 3 );
 
-    // Create text for the win/loss message
-    Text resultText;
-    resultText.setFont(font);
-    resultText.setCharacterSize(40);
+    // create text for the win/loss message
+    Text result_text;
+    result_text.setFont(font);
+    result_text.setCharacterSize(40);
 
     if (game_status) {
-        resultText.setString("You Win!");
-        resultText.setFillColor(Color::Green);
-    } else if (game_status) {
-        resultText.setString("Game Over");
-        resultText.setFillColor(Color::Red);
+        result_text.setString("You Win!");
+        result_text.setFillColor(Color::Green);
+    } else if (!game_status) {
+        result_text.setString("Game Over");
+        result_text.setFillColor(Color::Red);
     }
 
-    // Center the result text
-    FloatRect textRect = resultText.getLocalBounds();
-    resultText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
-    resultText.setPosition(game_window->getSize().x / 2.0f, game_window->getSize().y / 2.5f);
+    // center text
+    FloatRect textRect = result_text.getLocalBounds();
+    result_text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    result_text.setPosition(game_window->getSize().x / 2.0f, game_window->getSize().y / 2.5f);
 
-    // Create a "Return to Menu" button
-    RectangleShape returnButton(Vector2f(200, 50));
-    returnButton.setFillColor(Color(50, 150, 50));
-    returnButton.setPosition(game_window->getSize().x / 2.0f - 100, game_window->getSize().y / 2.0f);
+    // return button
+    RectangleShape return_button(Vector2f(300, 50));
+    return_button.setFillColor(Color(50, 150, 50));
+    return_button.setPosition(game_window->getSize().x / 2.0f - 150, game_window->getSize().y / 2.0f);
 
-    // Set up text for the button
-    Text returnText;
-    returnText.setFont(font);
-    returnText.setCharacterSize(30);
-    returnText.setString("Return to Menu");
-    returnText.setFillColor(Color::White);
+    // label for button
+    Text return_text;
+    return_text.setFont(font);
+    return_text.setCharacterSize(30);
+    return_text.setString("Return to Menu");
+    return_text.setFillColor(Color::White);
 
-    FloatRect returnTextRect = returnText.getLocalBounds();
-    returnText.setOrigin(returnTextRect.left + returnTextRect.width / 2.0f, returnTextRect.top + returnTextRect.height / 2.0f);
-    returnText.setPosition(returnButton.getPosition().x + returnButton.getSize().x / 2, returnButton.getPosition().y + returnButton.getSize().y / 2);
+    FloatRect return_text_rect = return_text.getLocalBounds();
+    return_text.setOrigin(return_text_rect.left + return_text_rect.width / 2.0f, return_text_rect.top + return_text_rect.height / 2.0f);
+    return_text.setPosition(return_button.getPosition().x + return_button.getSize().x / 2, return_button.getPosition().y + return_button.getSize().y / 2);
 
     // Popup display and event handling loop
     bool popup_active = true;
@@ -817,23 +817,22 @@ void Game::display_popup(bool game_status) {
             if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 Vector2i mousePos = Mouse::getPosition(*game_window);
 
-                // Check if the "Return to Menu" button is clicked
-                if (returnButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                // if the button is clicked, do action
+                if (return_button.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                     popup_active = false;  // Exit the popup loop
                     return;
                 }
             }
         }
 
-        // Clear and draw the popup
         game_window->clear();
-        game_matrix->display(game_window);  // Keep displaying the game in the background
+        game_matrix->display(game_window); 
 
         // Draw popup elements
         game_window->draw(popup_bg);
-        game_window->draw(resultText);
-        game_window->draw(returnButton);
-        game_window->draw(returnText);
+        game_window->draw(result_text);
+        game_window->draw(return_button);
+        game_window->draw(return_text);
 
         game_window->display();
     }
