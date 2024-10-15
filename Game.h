@@ -32,6 +32,8 @@ class Game{
         bool check_game_win();
         void display_popup(bool game_status);
         void display_stats(RenderWindow* window);
+        void askForUsername(RenderWindow* window);
+        void savePlayerData(const string& playerName);
 
         // getters and setters
         RenderWindow* get_game_window();
