@@ -209,24 +209,25 @@ void Game::run() {
 string Game::ask_for_username(RenderWindow* window) {
     string player_name = "";
 
-    // Create text for instructions
+    // loading font
     Font font;
     if (!font.loadFromFile("assets/monospace.ttf")) {
-        return ""; // Handle font loading error
+        return "";
     }
 
+    // ask for name
     Text instruction("Enter your name:", font, 30);
     instruction.setFillColor(Color::White);
-    instruction.setPosition(100, 150); // Adjust as needed
+    instruction.setPosition(100, 150); 
 
-    // Create a text input field
+    // text input field
     RectangleShape input_box(Vector2f(300, 50));
     input_box.setFillColor(Color::White);
-    input_box.setPosition(100, 250); // Adjust as needed
+    input_box.setPosition(100, 250); 
 
-    Text input_text("", font, 30); // Text to show input
+    Text input_text("", font, 30); 
     input_text.setFillColor(Color::Black);
-    input_text.setPosition(110, 255); // Inside the input box
+    input_text.setPosition(110, 255); // inside the input box
 
     bool is_running = true;
     while (is_running && window->isOpen()) {
@@ -236,42 +237,40 @@ string Game::ask_for_username(RenderWindow* window) {
                 window->close();
             }
 
-            // Handle text input
             if (event.type == Event::TextEntered) {
                 if (event.text.unicode == '\b' && !player_name.empty()) {
-                    // Backspace key: remove last character
+                    // backspace key to remove last character
                     player_name.pop_back();
                 } else if (event.text.unicode < 128 && event.text.unicode != '\b') {
-                    char enteredChar = static_cast<char>(event.text.unicode);
+                    char enteredChar = (char)(event.text.unicode);
                     
-                    // Ignore commas, newlines, and carriage returns
+                    // ignore commas, newlines 
                     if (enteredChar != ',' && enteredChar != '\n' && enteredChar != '\r') {
                         player_name += enteredChar;
                     }
                 }
-                input_text.setString(player_name); // Update input display
+                input_text.setString(player_name); 
             }
 
-            // Handle Enter key to submit the name
+            // submit name
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
                 is_running = false; // Exit loop after name is entered
             }
         }
 
-        // Clear window and draw input form
-        window->clear(Color(50, 50, 50)); // Dark background
+        window->clear(Color(50, 50, 50));
         window->draw(instruction);
         window->draw(input_box);
         window->draw(input_text);
         window->display();
     }
 
-    // Once input is received, link the name to the CSV
+    // linking to csv
     if (!player_name.empty()) {
-        return player_name; // Function to save name to the CSV
+        return player_name;
     }
 
-    return "";
+    return "anonymous"; // if no name entered, return anonymous
 }
 
 // function to display stats
