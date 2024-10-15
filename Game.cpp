@@ -183,8 +183,10 @@ void Game::run() {
                 else if (mine_percentage==PERCENTAGE_MINES_MEDIUM) { difficulty = "Medium";}
                 else if (mine_percentage==PERCENTAGE_MINES_HARD) { difficulty = "Hard";}
 
+                string user_name = ask_for_username(game_window);
 
-                append_stats("joe",score,final_time,difficulty);
+
+                append_stats(user_name,score,final_time,difficulty);
                 display_popup(true);
                 delete game_matrix;
                 game_matrix = nullptr;
@@ -202,13 +204,15 @@ void Game::run() {
 
     delete game_matrix;
 }
-void Game::askForUsername(RenderWindow* window) {
-    string playerName = "";
+
+
+string Game::ask_for_username(RenderWindow* window) {
+    string player_name = "";
 
     // Create text for instructions
     Font font;
     if (!font.loadFromFile("assets/monospace.ttf")) {
-        return; // Handle font loading error
+        return ""; // Handle font loading error
     }
 
     Text instruction("Enter your name:", font, 30);
@@ -216,16 +220,16 @@ void Game::askForUsername(RenderWindow* window) {
     instruction.setPosition(100, 150); // Adjust as needed
 
     // Create a text input field
-    RectangleShape inputBox(Vector2f(300, 50));
-    inputBox.setFillColor(Color::White);
-    inputBox.setPosition(100, 250); // Adjust as needed
+    RectangleShape input_box(Vector2f(300, 50));
+    input_box.setFillColor(Color::White);
+    input_box.setPosition(100, 250); // Adjust as needed
 
-    Text inputText("", font, 30); // Text to show input
-    inputText.setFillColor(Color::Black);
-    inputText.setPosition(110, 255); // Inside the input box
+    Text input_text("", font, 30); // Text to show input
+    input_text.setFillColor(Color::Black);
+    input_text.setPosition(110, 255); // Inside the input box
 
-    bool isRunning = true;
-    while (isRunning && window->isOpen()) {
+    bool is_running = true;
+    while (is_running && window->isOpen()) {
         Event event;
         while (window->pollEvent(event)) {
             if (event.type == Event::Closed) {
@@ -234,47 +238,42 @@ void Game::askForUsername(RenderWindow* window) {
 
             // Handle text input
             if (event.type == Event::TextEntered) {
-                if (event.text.unicode == '\b' && !playerName.empty()) {
+                if (event.text.unicode == '\b' && !player_name.empty()) {
                     // Backspace key: remove last character
-                    playerName.pop_back();
+                    player_name.pop_back();
                 } else if (event.text.unicode < 128 && event.text.unicode != '\b') {
-                    // Regular character input
-                    playerName += static_cast<char>(event.text.unicode);
+                    char enteredChar = static_cast<char>(event.text.unicode);
+                    
+                    // Ignore commas, newlines, and carriage returns
+                    if (enteredChar != ',' && enteredChar != '\n' && enteredChar != '\r') {
+                        player_name += enteredChar;
+                    }
                 }
-                inputText.setString(playerName); // Update input display
+                input_text.setString(player_name); // Update input display
             }
 
             // Handle Enter key to submit the name
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
-                isRunning = false; // Exit loop after name is entered
+                is_running = false; // Exit loop after name is entered
             }
         }
 
         // Clear window and draw input form
         window->clear(Color(50, 50, 50)); // Dark background
         window->draw(instruction);
-        window->draw(inputBox);
-        window->draw(inputText);
+        window->draw(input_box);
+        window->draw(input_text);
         window->display();
     }
 
     // Once input is received, link the name to the CSV
-    if (!playerName.empty()) {
-        savePlayerData(playerName); // Function to save name to the CSV
+    if (!player_name.empty()) {
+        return player_name; // Function to save name to the CSV
     }
+
+    return "";
 }
 
-// Define savePlayerData function
-void Game::savePlayerData(const string& playerName) {
-    ofstream file("game_stats.csv", ios::app); // Open CSV in append mode
-    if (!file.is_open()) {
-        return;
-    }
-    
-    // Write player name, add placeholders for difficulty, score, time, etc.
-    file << playerName << endl;  // Example: Name, Difficulty, Score, Time
-    file.close();
-}
 // function to display stats
 void Game::display_stats(RenderWindow* window) {
     // loading font
@@ -642,7 +641,7 @@ void Game::main_menu(RenderWindow* window) {
                 // button controls
                 if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                     if (play_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
-                        askForUsername(window);
+                        // ask_for_username(window);
                         selecting_difficulty = true;
                         // is_playing = true;
                         in_menu = false;
