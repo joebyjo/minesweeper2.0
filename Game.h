@@ -20,6 +20,7 @@ class Game{
         bool is_first_click;
         Clock game_timer;
         bool hasStarted;
+        float mine_percentage;
 
     public:
         Game(int num_cols, int num_rows);

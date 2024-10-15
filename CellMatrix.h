@@ -23,7 +23,7 @@ class CellMatrix{
         RenderWindow *game_window;
 
     public:
-        CellMatrix(int num_rows, int num_cols, RenderWindow *game_window);
+        CellMatrix(int num_rows, int num_cols, float mine_percentage,RenderWindow *game_window);
         void display(RenderWindow *game_window);
 
         void set_gameboard(); // set the game board to the type of cell

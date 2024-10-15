@@ -8,7 +8,7 @@
 #include "Number.h"
 #include "Powerup.h"
 
-CellMatrix::CellMatrix(int num_rows, int num_cols, RenderWindow *game_window) {
+CellMatrix::CellMatrix(int num_rows, int num_cols, float mine_percentage,RenderWindow *game_window) {
 
     // updating value of matrix
     this->num_rows = num_rows;
@@ -17,7 +17,7 @@ CellMatrix::CellMatrix(int num_rows, int num_cols, RenderWindow *game_window) {
     // creating the 2D array of cells pointer
     matrix = new Cell*[num_rows * num_cols]; 
 
-    num_mines = num_rows * num_cols * PERCENTAGE_MINES;
+    num_mines = num_rows * num_cols * mine_percentage;
 
     // initialising initially with nullptr
     for (int i = 0; i < num_rows*num_cols; i++) {

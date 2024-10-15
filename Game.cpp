@@ -12,13 +12,17 @@ Game::Game(int num_cols, int num_rows) {
     // game_window->setPosition(sf::Vector2i((desktop.width - 1000)/8, (desktop.height - 750)/8));
     
     // creating the matrix of cells
-    game_matrix = new CellMatrix(num_rows, num_cols, game_window); 
+    game_matrix = nullptr;
 
     // intialize game start status
     hasStarted = false;
 }
 
 void Game::run() {
+
+    // creating the matrix of cells
+    game_matrix = new CellMatrix(NUM_OF_ROWS, NUM_OF_COLS, mine_percentage,game_window); 
+
     // game window (dynamic size)
     game_window->create(VideoMode(CELL_SIZE * game_matrix->get_num_cols(),
                                   CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE);
@@ -176,13 +180,15 @@ void Game::run() {
         game_matrix->display(game_window);
         game_window->display();
     }
+
+    delete game_matrix;
 }
 
 // function to display highscores
 void Game::display_stats(RenderWindow* window) {
     // loading font
     Font font;
-    if (!font.loadFromFile(ASSETS_PATH+"monospace2.ttf")) {
+    if (!font.loadFromFile(ASSETS_PATH+"monospace.ttf")) {
         return;
     }
 
@@ -386,6 +392,25 @@ void Game::mainMenu(RenderWindow* window) {
     playButton.setOutlineThickness(2);
     playButton.setOutlineColor(Color::White);
 
+    // Difficulty buttons (for difficulty selection screen)
+    RectangleShape easyButton(Vector2f(250, 75));
+    easyButton.setFillColor(BUTTON_COLOR);
+    easyButton.setPosition(600, 300);
+    easyButton.setOutlineThickness(2);
+    easyButton.setOutlineColor(Color::White);
+
+    RectangleShape mediumButton(Vector2f(250, 75));
+    mediumButton.setFillColor(BUTTON_COLOR);
+    mediumButton.setPosition(600, 400);
+    mediumButton.setOutlineThickness(2);
+    mediumButton.setOutlineColor(Color::White);
+
+    RectangleShape hardButton(Vector2f(250, 75));
+    hardButton.setFillColor(BUTTON_COLOR);
+    hardButton.setPosition(600, 500);
+    hardButton.setOutlineThickness(2);
+    hardButton.setOutlineColor(Color::White);
+
     RectangleShape helpButton(Vector2f(175, 75));
     helpButton.setFillColor(Color(BUTTON_COLOR));
     helpButton.setPosition(625, 425);
@@ -405,12 +430,30 @@ void Game::mainMenu(RenderWindow* window) {
     nextButton.setOutlineColor(Color::White);
 
     // Labels
-    Text playText, helpText, statsText, nextText;
+    Text playText, helpText, statsText, nextText, easyText, mediumText, hardText;;
     playText.setFont(font);
     playText.setString("Play");
     playText.setCharacterSize(30);
     playText.setFillColor(Color::Black);
     playText.setPosition(playButton.getPosition().x + 30, playButton.getPosition().y + 25);
+
+    easyText.setFont(font);
+    easyText.setString("Easy");
+    easyText.setCharacterSize(30);
+    easyText.setFillColor(Color::Black);
+    easyText.setPosition(easyButton.getPosition().x + 60, easyButton.getPosition().y + 25);
+
+    mediumText.setFont(font);
+    mediumText.setString("Medium");
+    mediumText.setCharacterSize(30);
+    mediumText.setFillColor(Color::Black);
+    mediumText.setPosition(mediumButton.getPosition().x + 40, mediumButton.getPosition().y + 25);
+
+    hardText.setFont(font);
+    hardText.setString("Hard");
+    hardText.setCharacterSize(30);
+    hardText.setFillColor(Color::Black);
+    hardText.setPosition(hardButton.getPosition().x + 60, hardButton.getPosition().y + 25);
 
     helpText.setFont(font);
     helpText.setString("Help");
@@ -432,6 +475,7 @@ void Game::mainMenu(RenderWindow* window) {
 
     // Status
     bool isPlaying = false;
+    bool selectingDifficulty = false;
     bool inMenu = true;
     bool inHelp = false;
     int currentImageIndex = 0;
@@ -479,9 +523,10 @@ void Game::mainMenu(RenderWindow* window) {
                 }
 
                 // button controls
-                if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                     if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                        isPlaying = true;   // Start the game
+                        selectingDifficulty = true;
+                        // isPlaying = true;   // Start the game
                         inMenu = false;
                     } else if (helpButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         inHelp = true; // Show help page
@@ -493,7 +538,7 @@ void Game::mainMenu(RenderWindow* window) {
             }
 
             // changing help instruction images
-            if (inHelp && event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+            if (inHelp && event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 Vector2i mousePos = Mouse::getPosition(*window);
                 if (nextButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                     currentImageIndex++; 
@@ -505,6 +550,58 @@ void Game::mainMenu(RenderWindow* window) {
                 }
             }
         }
+
+        // Difficulty selection screen
+        if (selectingDifficulty) {
+            Vector2i mousePos = Mouse::getPosition(*window);
+
+            // Easy Button hover effect
+            if (easyButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                easyButton.setFillColor(Color(BUTTON_COLOR));
+                easyButton.setOutlineColor(Color::Black);
+            } else {
+                easyButton.setFillColor(Color(BUTTON_COLOR.r - 30, BUTTON_COLOR.g - 10, BUTTON_COLOR.b - 10)); // Decrease brightness
+                easyButton.setOutlineColor(Color::White);
+            }
+
+            // Medium Button hover effect
+            if (mediumButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                mediumButton.setFillColor(Color(BUTTON_COLOR));
+                mediumButton.setOutlineColor(Color::Black);
+            } else {
+                mediumButton.setFillColor(Color(BUTTON_COLOR.r - 30, BUTTON_COLOR.g - 10, BUTTON_COLOR.b - 10)); // Decrease brightness
+                mediumButton.setOutlineColor(Color::White);
+            }
+
+            // Hard Button hover effect
+            if (hardButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                hardButton.setFillColor(Color(BUTTON_COLOR));
+                hardButton.setOutlineColor(Color::Black);
+            } else {
+                hardButton.setFillColor(Color(BUTTON_COLOR.r - 30, BUTTON_COLOR.g - 10, BUTTON_COLOR.b - 10)); // Decrease brightness
+                hardButton.setOutlineColor(Color::White);
+            }
+            
+            // Handle mouse clicks to select difficulty
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                if (easyButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    mine_percentage = 0.1; // Easy difficulty
+                    isPlaying = true; // Start game after difficulty is chosen
+                    selectingDifficulty = false;
+                }
+                if (mediumButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    mine_percentage = 0.5; // Medium difficulty
+                    isPlaying = true; // Start game
+                    selectingDifficulty = false;
+                }
+                if (hardButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    mine_percentage = 0.7; // Hard difficulty
+                    isPlaying = true; // Start game
+                    selectingDifficulty = false;
+                }
+            }
+        }
+
 
         // update current frame
         if (frameClock.getElapsedTime().asSeconds() >= frameDuration) {
@@ -546,6 +643,13 @@ void Game::mainMenu(RenderWindow* window) {
 
             window->draw(nextButton);
             window->draw(nextText);
+        } else if (selectingDifficulty) {
+            window->draw(easyButton);
+            window->draw(easyText);
+            window->draw(mediumButton);
+            window->draw(mediumText);
+            window->draw(hardButton);
+            window->draw(hardText);
         }
 
         window->display(); 
@@ -584,7 +688,7 @@ bool Game::play_animation() {
     }
 
     if (current_mine_index < game_matrix->get_mine_locations().size()) {
-        if (clock.getElapsedTime().asMilliseconds() >= ANIMATION_DELAY) {
+        if (clock.getElapsedTime().asMilliseconds() >= ( ANIMATION_DURATION / (game_matrix->get_num_cols()*game_matrix->get_num_rows()*mine_percentage))) {
             int location = game_matrix->get_mine_locations()[current_mine_index];
             Cell* mine = game_matrix->get_matrix()[location];
 
@@ -652,6 +756,6 @@ void Game::set_is_first_click(bool is_first_click) { this->is_first_click = is_f
 // destroy all attached objects 
 Game:: ~Game() {
     delete game_window;
-    delete game_matrix;
+    // delete game_matrix;
 }
  
