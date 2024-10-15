@@ -2,9 +2,9 @@
 #define CELLMATRIX_TESTS_h
 
 #include <iostream>
-#include "Cell.h"
-#include "CellMatrix.h"
-#include "Game.h"
+#include "../Cell.h"
+#include "../CellMatrix.h"
+#include "../Game.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
