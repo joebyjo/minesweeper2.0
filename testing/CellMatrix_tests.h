@@ -22,7 +22,7 @@ class CellMatrix_tests {
 
     private:
         void test_constructor(){
-            CellMatrix matrix(5, 5, nullptr);
+            CellMatrix matrix(5, 5, 0.3,nullptr);
 
             if (matrix.get_num_cols() == 5){
                 cout << "[*] Contructor test passed" << endl;
@@ -33,6 +33,8 @@ class CellMatrix_tests {
 
             // setting the game
             Game test_game(5, 5);
+            CellMatrix temp(5, 5, 0.3, test_game.get_game_window());
+            test_game.set_game_matrix(&temp);
             CellMatrix* test = test_game.get_game_matrix();
             test->set_gameboard();
 
@@ -46,7 +48,7 @@ class CellMatrix_tests {
         }
 
         void test_set_mine(){
-            CellMatrix test(5, 5, nullptr);
+            CellMatrix test(5, 5, 0.3, nullptr);
             test.set_mines();
 
             if (test.get_matrix()[test.get_mine_locations()[0]]->get_type() == "mine" && test.get_matrix()[test.get_mine_locations()[test.get_num_mines() - 1]]->get_type() == "mine"){
@@ -57,7 +59,7 @@ class CellMatrix_tests {
         }
 
         void test_set_number(){
-            CellMatrix test(10, 10, nullptr);
+            CellMatrix test(10, 10, 0.3, nullptr);
             test.set_mines();
             test.set_numbers();
 

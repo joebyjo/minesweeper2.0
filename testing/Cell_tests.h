@@ -46,6 +46,8 @@ class Cell_tests {
 
         void test_set_and_get_color() {
                 Game test(5, 5);
+                CellMatrix temp(5, 5, 0.3, test.get_game_window());
+                test.set_game_matrix(&temp);
                 test.get_game_matrix()->set_gameboard();
                 Cell* cell = test.get_game_matrix()->get_matrix()[0,0];
                 cell->set_color(Color:: Red);
@@ -73,7 +75,7 @@ class Cell_tests {
 
         void test_reveal() {
 
-            CellMatrix test(5, 5, nullptr);
+            CellMatrix test(5, 5, 0.3, nullptr);
             test.set_gameboard();
             Cell* cell = test.get_matrix()[0,0];
             cell->reveal(&test);
@@ -89,6 +91,8 @@ class Cell_tests {
         void test_flag() {
 
             Game test(5, 5);
+            CellMatrix temp(5, 5, 0.3, test.get_game_window());
+            test.set_game_matrix(&temp);
             test.get_game_matrix()->set_gameboard();
             Cell* cell = test.get_game_matrix()->get_matrix()[0,0];
 
