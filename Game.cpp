@@ -7,7 +7,7 @@
 Game::Game(int num_cols, int num_rows) {
     
     // creating the window
-    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE);
+    game_window = new RenderWindow(VideoMode(CELL_SIZE * num_cols, CELL_SIZE * num_rows), WINDOW_TITLE, Style::Titlebar | Style::Close);
     // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     // game_window->setPosition(sf::Vector2i((desktop.width - 1000)/8, (desktop.height - 750)/8));
     
@@ -25,7 +25,7 @@ void Game::run() {
 
     // game window (dynamic size)
     game_window->create(VideoMode(CELL_SIZE * game_matrix->get_num_cols(),
-                                  CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE);
+                                  CELL_SIZE * game_matrix->get_num_rows() + 50), WINDOW_TITLE, Style::Titlebar | Style::Close);
 
     // shape for progress bar (hollow)
     RectangleShape progress_bar_bg(Vector2f(game_window->getSize().x / 4, 20)); 
@@ -183,8 +183,10 @@ void Game::run() {
                 else if (mine_percentage==PERCENTAGE_MINES_MEDIUM) { difficulty = "Medium";}
                 else if (mine_percentage==PERCENTAGE_MINES_HARD) { difficulty = "Hard";}
 
+                string user_name = ask_for_username(game_window);
 
-                append_stats("joe",score,final_time,difficulty);
+
+                append_stats(user_name,score,final_time,difficulty);
                 display_popup(true);
                 delete game_matrix;
                 game_matrix = nullptr;
@@ -201,6 +203,74 @@ void Game::run() {
     }
 
     delete game_matrix;
+}
+
+
+string Game::ask_for_username(RenderWindow* window) {
+    string player_name = "";
+
+    // loading font
+    Font font;
+    if (!font.loadFromFile("assets/monospace.ttf")) {
+        return "";
+    }
+
+    // ask for name
+    Text instruction("Enter your name:", font, 30);
+    instruction.setFillColor(Color::White);
+    instruction.setPosition(100, 150); 
+
+    // text input field
+    RectangleShape input_box(Vector2f(300, 50));
+    input_box.setFillColor(Color::White);
+    input_box.setPosition(100, 250); 
+
+    Text input_text("", font, 30); 
+    input_text.setFillColor(Color::Black);
+    input_text.setPosition(110, 255); // inside the input box
+
+    bool is_running = true;
+    while (is_running && window->isOpen()) {
+        Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window->close();
+            }
+
+            if (event.type == Event::TextEntered) {
+                if (event.text.unicode == '\b' && !player_name.empty()) {
+                    // backspace key to remove last character
+                    player_name.pop_back();
+                } else if (event.text.unicode < 128 && event.text.unicode != '\b') {
+                    char enteredChar = (char)(event.text.unicode);
+                    
+                    // ignore commas, newlines 
+                    if (enteredChar != ',' && enteredChar != '\n' && enteredChar != '\r') {
+                        player_name += enteredChar;
+                    }
+                }
+                input_text.setString(player_name); 
+            }
+
+            // submit name
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
+                is_running = false; // Exit loop after name is entered
+            }
+        }
+
+        window->clear(Color(50, 50, 50));
+        window->draw(instruction);
+        window->draw(input_box);
+        window->draw(input_text);
+        window->display();
+    }
+
+    // linking to csv
+    if (!player_name.empty()) {
+        return player_name;
+    }
+
+    return "anonymous"; // if no name entered, return anonymous
 }
 
 // function to display stats
@@ -393,7 +463,7 @@ void Game::display_stats(RenderWindow* window) {
 
 void Game::main_menu(RenderWindow* window) {
     // main menu window (fixed size)
-    game_window->create(VideoMode(1000, 750), "Main Menu");
+    game_window->create(VideoMode(1000, 750), "Main Menu", Style::Titlebar | Style::Close);
 
     // loading fonts
     Font font;  
@@ -570,6 +640,7 @@ void Game::main_menu(RenderWindow* window) {
                 // button controls
                 if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                     if (play_button.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
+                        // ask_for_username(window);
                         selecting_difficulty = true;
                         // is_playing = true;
                         in_menu = false;
