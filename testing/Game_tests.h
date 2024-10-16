@@ -1,5 +1,5 @@
 #ifndef GAME_TESTS_H
-#define GAME_TESTS_h
+#define GAME_TESTS_H
 
 #include <iostream>
 #include "../Cell.h"

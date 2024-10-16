@@ -1,5 +1,5 @@
 #ifndef CELLMATRIX_TESTS_H
-#define CELLMATRIX_TESTS_h
+#define CELLMATRIX_TESTS_H
 
 #include <iostream>
 #include "../Cell.h"

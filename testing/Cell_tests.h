@@ -1,5 +1,5 @@
 #ifndef CELL_TESTS_H
-#define CELL_TESTS_h
+#define CELL_TESTS_H
 
 #include <iostream>
 #include "../Cell.h"
@@ -49,7 +49,7 @@ class Cell_tests {
                 CellMatrix temp(5, 5, 0.3, test.get_game_window());
                 test.set_game_matrix(&temp);
                 test.get_game_matrix()->set_gameboard();
-                Cell* cell = test.get_game_matrix()->get_matrix()[0,0];
+                Cell* cell = test.get_game_matrix()->get_matrix()[0];
                 cell->set_color(Color:: Red);
 
                 while(test.get_game_window()->isOpen()){
@@ -77,7 +77,7 @@ class Cell_tests {
 
             CellMatrix test(5, 5, 0.3, nullptr);
             test.set_gameboard();
-            Cell* cell = test.get_matrix()[0,0];
+            Cell* cell = test.get_matrix()[0];
             cell->reveal(&test);
 
             // Check if the cell was revealed
@@ -94,7 +94,7 @@ class Cell_tests {
             CellMatrix temp(5, 5, 0.3, test.get_game_window());
             test.set_game_matrix(&temp);
             test.get_game_matrix()->set_gameboard();
-            Cell* cell = test.get_game_matrix()->get_matrix()[0,0];
+            Cell* cell = test.get_game_matrix()->get_matrix()[0];
 
             test.get_game_matrix()->display(test.get_game_window());
             test.get_game_window()->display();

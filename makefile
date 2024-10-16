@@ -4,7 +4,7 @@ TARGET = game
 
 # source files
 SOURCES = Game.cpp Cell.cpp CellMatrix.cpp Empty.cpp Mine.cpp Number.cpp Powerup.cpp
-TEST_SOURCES = testing/unit_test.cpp testing/Cell_tests.h testing/CellMatrix_tests.h testing/Game_tests.h
+TEST_SOURCES = testing/unit_test.cpp
 
 # user data file
 USERDATA_FILE = game_stats.csv
