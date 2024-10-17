@@ -27,7 +27,7 @@ const float ANIMATION_DURATION = 3000;
 const int XRAY_DURATION = 2000;
 
 // number of Powerups in the game
-const int NUM_POWERUPS = 1;
+const int NUM_POWERUPS = 2;
 
 // padding
 const float NUMBER_CELL_PADDING = 7.5;
