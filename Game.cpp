@@ -337,6 +337,11 @@ void Game::display_stats(RenderWindow* window) {
         data.push_back({ names[i], scores[i], accuracies[i], difficulties[i] });
     }
 
+    // only show latest 15 entries
+    if (data.size() > 15) {
+        data = vector<vector<string>>(data.end() - 15, data.end());
+    }
+
     // get max width of each col
     vector<int> col_widths(headers.size(), 0);
     for (int i = 0; i < headers.size(); ++i) {
