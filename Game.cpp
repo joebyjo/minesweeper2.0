@@ -105,7 +105,9 @@ void Game::run() {
                     }
                 }
             } else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
-                game_window->close();
+                delete game_matrix;
+                game_matrix = nullptr;
+                return;
             }
 
         //     // hover off settings
