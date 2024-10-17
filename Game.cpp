@@ -303,7 +303,7 @@ void Game::display_stats(RenderWindow* window) {
     }
 
     string line;
-    vector<string> names, scores, accuracies, difficulties;
+    vector<string> names, scores, time_takens, difficulties;
 
     // // skip first line
     getline(file, line);
@@ -320,7 +320,7 @@ void Game::display_stats(RenderWindow* window) {
 
         names.push_back(name);
         scores.push_back(score);
-        accuracies.push_back(time_taken);
+        time_takens.push_back(time_taken);
         difficulties.push_back(difficulty);
     }
 
@@ -332,7 +332,12 @@ void Game::display_stats(RenderWindow* window) {
     // 2D vector for data
     vector<vector<string>> data;
     for (int i = 0; i < names.size(); ++i) {
-        data.push_back({ names[i], scores[i], accuracies[i], difficulties[i] });
+        data.push_back({ names[i], scores[i], time_takens[i], difficulties[i] });
+    }
+
+    // only show latest 15 entries
+    if (data.size() > 15) {
+        data = vector<vector<string>>(data.end() - 15, data.end());
     }
 
     // get max width of each col
