@@ -13,7 +13,7 @@ Powerup::Powerup(int x, int y): Number(x, y) {
 // on_revealed function a vortual void function
 void Powerup::on_revealed(CellMatrix* game_matrix) {
 
-    srand(RANDOM_SEED);
+    srand(time(0));
     int random = rand() % 2;
 
     if (random == 0){

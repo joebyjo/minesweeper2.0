@@ -50,7 +50,7 @@ void CellMatrix::set_gameboard() {
 }
 
 void CellMatrix::set_mines() {
-    srand(RANDOM_SEED);
+    srand(time(0));  // RANDOM_SEED
 
     auto check_if_member = [&](int num) {
         for (int j = 0; j < mine_locations.size(); j++) {
