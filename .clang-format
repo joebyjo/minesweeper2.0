@@ -1,0 +1,15 @@
+AccessModifierOffset: 0
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+BasedOnStyle: LLVM
+ColumnLimit: 120
+IndentAccessModifiers: true
+IndentWidth: 4
+PointerAlignment: Left
+SpaceBeforeParens: Never
+SpacesBeforeTrailingComments: 2
+Standard: Cpp11
+TabWidth: 4
+UseTab: Never
