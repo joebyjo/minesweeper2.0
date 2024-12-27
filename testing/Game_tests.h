@@ -1,9 +1,9 @@
 #ifndef GAME_TESTS_H
 #define GAME_TESTS_H
 
-#include "../Cell.h"
-#include "../CellMatrix.h"
-#include "../Game.h"
+#include "../src/Cell.h"
+#include "../src/CellMatrix.h"
+#include "../src/Game.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 

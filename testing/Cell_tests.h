@@ -1,10 +1,10 @@
 #ifndef CELL_TESTS_H
 #define CELL_TESTS_H
 
-#include "../Cell.h"
-#include "../CellMatrix.h"
-#include "../Empty.h"
-#include "../Game.h"
+#include "../src/Cell.h"
+#include "../src/CellMatrix.h"
+#include "../src/Empty.h"
+#include "../src/Game.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
