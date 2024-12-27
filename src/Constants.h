@@ -50,7 +50,7 @@ const Color POWERUP_COLOR = Color(255, 215, 0);
 const Color MAIN_BG_COLOR = Color(170, 215, 81);
 const Color BUTTON_COLOR = Color(102, 178, 225);
 // Assets path
-const string ASSETS_PATH = "assets/";
+const string ASSETS_PATH = "../assets/";
 const string USERDATA_FILE = "game_stats.csv";
 
 #endif

@@ -61,7 +61,7 @@ void Game::run() {
 
     // load font for timer
     Font timer_font;
-    if(!timer_font.loadFromFile("assets/monospace.ttf")) {
+    if(!timer_font.loadFromFile(ASSETS_PATH + "monospace.ttf")) {
         return;
     }
 
@@ -215,7 +215,7 @@ string Game::ask_for_username(RenderWindow* window) {
 
     // loading font
     Font font;
-    if(!font.loadFromFile("assets/monospace.ttf")) {
+    if(!font.loadFromFile(ASSETS_PATH + "monospace.ttf")) {
         return "";
     }
 
@@ -481,19 +481,19 @@ void Game::main_menu(RenderWindow* window) {
 
     // loading fonts
     Font font;
-    if(!font.loadFromFile("assets/8bit.ttf")) {
+    if(!font.loadFromFile(ASSETS_PATH + "8bit.ttf")) {
         return;
     }
 
     Font font1;
-    if(!font1.loadFromFile("assets/monospace.ttf")) {
+    if(!font1.loadFromFile(ASSETS_PATH + "monospace.ttf")) {
         return;
     }
 
     // gif1 frames
     Texture gif1_textures[20];
     for(int i = 0; i < 20; ++i) {
-        if(!gif1_textures[i].loadFromFile("assets/gif1/g1f" + to_string(i + 1) + ".png")) {
+        if(!gif1_textures[i].loadFromFile(ASSETS_PATH + "gif1/g1f" + to_string(i + 1) + ".png")) {
             return;
         }
     }
@@ -501,7 +501,7 @@ void Game::main_menu(RenderWindow* window) {
     // gif2 frames
     Texture gif2_textures[20];
     for(int i = 0; i < 20; ++i) {
-        if(!gif2_textures[i].loadFromFile("assets/gif2/g2f" + to_string(i + 1) + ".png")) {
+        if(!gif2_textures[i].loadFromFile(ASSETS_PATH + "gif2/g2f" + to_string(i + 1) + ".png")) {
             return;
         }
     }
@@ -509,7 +509,7 @@ void Game::main_menu(RenderWindow* window) {
     // help images
     Texture help_images[4];
     for(int i = 0; i < 4; ++i) {
-        if(!help_images[i].loadFromFile("assets/help/h" + to_string(i + 1) + ".png")) {
+        if(!help_images[i].loadFromFile(ASSETS_PATH + "help/h" + to_string(i + 1) + ".png")) {
             return;
         }
     }
@@ -850,7 +850,7 @@ bool Game::play_animation() {
 void Game::display_popup(bool game_status) {
     // Load font
     Font font;
-    if(!font.loadFromFile("assets/monospace.ttf")) {
+    if(!font.loadFromFile(ASSETS_PATH + "monospace.ttf")) {
         return;
     }
 
