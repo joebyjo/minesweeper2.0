@@ -25,8 +25,8 @@ $(TARGET): main.cpp $(SOURCES) $(USERDATA_FILE)
 	../build/./$(TARGET).out
 
 test: $(TEST_SOURCES) $(SOURCES)
-	g++ -std=c++11 $(TEST_SOURCES) $(SOURCES) $(SFML_LIBS) -o test.out
-	./test.out
+	g++ -std=c++11 $(TEST_SOURCES) $(SOURCES) $(SFML_LIBS) -o ../build/test.out
+	../build/./test.out
 
 # create CSV if not exist
 $(USERDATA_FILE):
