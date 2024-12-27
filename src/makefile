@@ -1,6 +1,6 @@
 
 # output file name
-TARGET = game
+TARGET = minesweeper
 
 # source files
 SOURCES = Game.cpp Cell.cpp CellMatrix.cpp Empty.cpp Mine.cpp Number.cpp Powerup.cpp
@@ -21,8 +21,8 @@ endif
 
 # build executable and run exectuable
 $(TARGET): main.cpp $(SOURCES) $(USERDATA_FILE)
-	g++ -std=c++11 main.cpp $(SOURCES) $(SFML_LIBS) -o $(TARGET).out
-	./$(TARGET).out 
+	g++ -std=c++11 main.cpp $(SOURCES) $(SFML_LIBS) -o ../build/$(TARGET).out
+	../build/./$(TARGET).out
 
 test: $(TEST_SOURCES) $(SOURCES)
 	g++ -std=c++11 $(TEST_SOURCES) $(SOURCES) $(SFML_LIBS) -o test.out
@@ -40,4 +40,4 @@ $(USERDATA_FILE):
 
 # clean workspace
 clean:
-	rm -f *.out *.o $(USERDATA_FILE)
+	rm -f ../build/*.out ../build/*.o $(USERDATA_FILE)
